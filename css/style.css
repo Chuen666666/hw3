@@ -35,46 +35,38 @@ body {
   min-height: 100vh;
   margin: 0;
   color: var(--ink);
-  background:
-    radial-gradient(
-      circle at 8% 7%,
-      rgba(197, 150, 71, 0.18),
-      transparent 23rem
-    ),
-    radial-gradient(
-      circle at 94% 18%,
-      rgba(152, 40, 32, 0.13),
-      transparent 28rem
-    ),
-    linear-gradient(180deg, #fbf6eb 0%, #f4ead8 100%);
   font-family:
     "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
   line-height: 1.5;
+  background:
+    radial-gradient(circle at 8% 7%,
+      rgba(197, 150, 71, 0.18),
+      transparent 23rem),
+    radial-gradient(circle at 94% 18%,
+      rgba(152, 40, 32, 0.13),
+      transparent 28rem),
+    linear-gradient(180deg, #fbf6eb 0%, #f4ead8 100%);
 }
 
 body::before {
   position: fixed;
   inset: 0;
   z-index: -1;
-  content: "";
-  opacity: 0.28;
-  pointer-events: none;
   background-image:
-    linear-gradient(
-      30deg,
+    linear-gradient(30deg,
       transparent 48%,
       rgba(132, 85, 42, 0.08) 49%,
       rgba(132, 85, 42, 0.08) 51%,
-      transparent 52%
-    ),
-    linear-gradient(
-      150deg,
+      transparent 52%),
+    linear-gradient(150deg,
       transparent 48%,
       rgba(132, 85, 42, 0.06) 49%,
       rgba(132, 85, 42, 0.06) 51%,
-      transparent 52%
-    );
+      transparent 52%);
   background-size: 48px 84px;
+  opacity: 0.28;
+  pointer-events: none;
+  content: "";
 }
 
 button,
@@ -90,8 +82,8 @@ button {
   position: absolute;
   width: 1px;
   height: 1px;
-  padding: 0;
   margin: -1px;
+  padding: 0;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
@@ -123,18 +115,18 @@ button {
 .hero {
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 180px;
-  gap: 30px;
-  align-items: center;
   min-height: 330px;
   padding: 62px 16px 46px;
+  grid-template-columns: auto minmax(0, 1fr) 180px;
+  align-items: center;
+  gap: 30px;
 }
 
 .brand-seal {
   position: relative;
   display: grid;
-  width: 108px;
   aspect-ratio: 1;
+  width: 108px;
   place-items: center;
   color: var(--paper);
   background: var(--red-800);
@@ -147,15 +139,15 @@ button {
 .brand-seal::before {
   position: absolute;
   inset: 8px;
-  content: "";
   border: 1px solid rgba(255, 250, 240, 0.6);
   border-radius: 17px;
+  content: "";
 }
 
 .brand-seal span {
-  font-family: "Noto Serif TC", "PMingLiU", serif;
-  font-size: 3.3rem;
   font-weight: 700;
+  font-size: 3.3rem;
+  font-family: "Noto Serif TC", "PMingLiU", serif;
   line-height: 1;
 }
 
@@ -163,19 +155,19 @@ button {
 .section-kicker {
   margin: 0 0 8px;
   color: var(--gold-700);
-  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.2em;
+  font-size: 0.72rem;
   text-transform: uppercase;
+  letter-spacing: 0.2em;
 }
 
 .hero h1 {
   margin: 0;
-  font-family: "Noto Serif TC", "PMingLiU", serif;
-  font-size: clamp(2.65rem, 5.6vw, 5rem);
   font-weight: 800;
-  letter-spacing: 0.03em;
+  font-size: clamp(2.65rem, 5.6vw, 5rem);
+  font-family: "Noto Serif TC", "PMingLiU", serif;
   line-height: 1.04;
+  letter-spacing: 0.03em;
 }
 
 .hero h1 span {
@@ -210,14 +202,15 @@ button {
   top: 42px;
   width: 20px;
   height: 20px;
-  content: "";
   border: 4px solid var(--red-700);
   transform: rotate(45deg);
+  content: "";
 }
 
 .knot::before {
   left: -18px;
 }
+
 .knot::after {
   right: -18px;
 }
@@ -231,19 +224,17 @@ button {
   height: 128px;
   place-items: center;
   color: var(--gold-300);
-  background: linear-gradient(
-    90deg,
-    var(--red-900),
-    #aa3025 50%,
-    var(--red-900)
-  );
+  font-weight: 700;
+  font-size: 2.2rem;
+  font-family: "Noto Serif TC", "PMingLiU", serif;
+  background: linear-gradient(90deg,
+      var(--red-900),
+      #aa3025 50%,
+      var(--red-900));
   border: 4px solid var(--gold-500);
   border-width: 4px 0;
   border-radius: 46%;
   box-shadow: 0 18px 40px rgba(101, 21, 18, 0.18);
-  font-family: "Noto Serif TC", "PMingLiU", serif;
-  font-size: 2.2rem;
-  font-weight: 700;
   transform: translateX(-50%);
 }
 
@@ -253,21 +244,19 @@ button {
   left: 50%;
   width: 3px;
   height: 46px;
-  content: "";
-  background: repeating-linear-gradient(
-    90deg,
-    var(--red-700) 0 1px,
-    transparent 1px 3px
-  );
+  background: repeating-linear-gradient(90deg,
+      var(--red-700) 0 1px,
+      transparent 1px 3px);
   transform: translateX(-50%);
+  content: "";
 }
 
 .tool-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.72fr) minmax(280px, 0.78fr);
-  gap: 24px;
-  align-items: start;
   padding-bottom: 34px;
+  grid-template-columns: minmax(0, 1.72fr) minmax(280px, 0.78fr);
+  align-items: start;
+  gap: 24px;
 }
 
 .calculator-card,
@@ -289,37 +278,37 @@ button {
   position: absolute;
   inset: 9px;
   z-index: -1;
-  content: "";
   border: 1px solid rgba(197, 150, 71, 0.22);
   border-radius: calc(var(--radius-lg) - 8px);
   pointer-events: none;
+  content: "";
 }
 
 .calculator-heading {
   display: flex;
-  gap: 18px;
+  margin-bottom: 22px;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 22px;
+  gap: 18px;
 }
 
 .calculator-heading h2,
 .guide-card h2 {
   margin: 0;
-  font-family: "Noto Serif TC", "PMingLiU", serif;
   font-size: clamp(1.55rem, 3vw, 2.1rem);
+  font-family: "Noto Serif TC", "PMingLiU", serif;
   line-height: 1.2;
 }
 
 .viewpoint-status {
-  flex: 0 0 auto;
   padding: 8px 12px;
+  flex: 0 0 auto;
   color: var(--red-800);
+  font-weight: 700;
+  font-size: 0.83rem;
   background: var(--red-100);
   border: 1px solid rgba(123, 29, 24, 0.14);
   border-radius: 999px;
-  font-size: 0.83rem;
-  font-weight: 700;
 }
 
 .display-panel {
@@ -327,7 +316,6 @@ button {
   min-height: 164px;
   margin-bottom: 20px;
   padding: 20px 22px;
-  overflow: hidden;
   color: #fff9ed;
   background:
     linear-gradient(135deg, rgba(228, 196, 126, 0.08), transparent 55%),
@@ -337,6 +325,7 @@ button {
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.04),
     0 10px 24px rgba(71, 16, 15, 0.17);
+  overflow: hidden;
 }
 
 .display-panel::after {
@@ -345,9 +334,9 @@ button {
   right: -28px;
   width: 120px;
   height: 120px;
-  content: "";
   border: 20px double rgba(228, 196, 126, 0.08);
   border-radius: 50%;
+  content: "";
 }
 
 .display-meta {
@@ -356,8 +345,8 @@ button {
   display: flex;
   justify-content: space-between;
   color: rgba(255, 249, 237, 0.66);
-  font-size: 0.78rem;
   font-weight: 700;
+  font-size: 0.78rem;
   letter-spacing: 0.08em;
 }
 
@@ -366,9 +355,9 @@ button {
   z-index: 1;
   min-height: 27px;
   margin: 17px 0 8px;
-  overflow-wrap: anywhere;
   color: rgba(255, 249, 237, 0.82);
   font-size: clamp(0.96rem, 2.2vw, 1.15rem);
+  overflow-wrap: anywhere;
 }
 
 .result {
@@ -377,9 +366,9 @@ button {
   display: block;
   min-height: 46px;
   color: rgba(255, 249, 237, 0.62);
-  font-family: inherit;
-  font-size: 1.05rem;
   font-weight: 700;
+  font-size: 1.05rem;
+  font-family: inherit;
   line-height: 1.2;
   transition:
     color 160ms ease,
@@ -392,17 +381,17 @@ button {
 
 .result.is-success {
   color: #f3d58f;
-  font-family: "Noto Serif TC", "PMingLiU", serif;
-  font-size: clamp(1.8rem, 4vw, 2.65rem);
   font-weight: 800;
+  font-size: clamp(1.8rem, 4vw, 2.65rem);
+  font-family: "Noto Serif TC", "PMingLiU", serif;
   transform: translateY(-1px);
 }
 
 .result.is-error {
   color: #ffc3b7;
-  font-family: inherit;
-  font-size: 1.05rem;
   font-weight: 700;
+  font-size: 1.05rem;
+  font-family: inherit;
 }
 
 .root-selector {
@@ -415,13 +404,13 @@ button {
 
 .root-selector-heading {
   display: flex;
-  gap: 12px;
+  margin-bottom: 10px;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  gap: 12px;
   color: var(--red-900);
-  font-size: 0.8rem;
   font-weight: 800;
+  font-size: 0.8rem;
 }
 
 .root-selector-heading b {
@@ -429,15 +418,15 @@ button {
   margin-left: 4px;
   padding: 2px 7px;
   color: var(--paper);
+  font-size: 0.66rem;
   background: var(--red-700);
   border-radius: 999px;
-  font-size: 0.66rem;
 }
 
 #root-required-message {
   color: var(--error);
-  font-size: 0.74rem;
   font-weight: 700;
+  font-size: 0.74rem;
 }
 
 #root-required-message.is-complete {
@@ -470,19 +459,19 @@ button {
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   box-shadow: 0 5px 12px rgba(76, 48, 25, 0.06);
-  cursor: pointer;
-  touch-action: manipulation;
-  user-select: none;
   transition:
     transform 140ms ease,
     box-shadow 140ms ease,
     border-color 140ms ease,
     background 140ms ease;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .key span {
-  font-size: 1.02rem;
   font-weight: 800;
+  font-size: 1.02rem;
 }
 
 .key small {
@@ -514,8 +503,8 @@ button {
   background: #eee7dc;
   border-color: rgba(92, 61, 38, 0.09);
   box-shadow: none;
-  cursor: not-allowed;
   transform: none;
+  cursor: not-allowed;
 }
 
 .key:disabled small {
@@ -597,28 +586,28 @@ button {
   right: -70px;
   width: 170px;
   height: 170px;
-  content: "";
   border: 1px solid rgba(152, 40, 32, 0.09);
   border-radius: 50%;
   box-shadow:
     0 0 0 18px rgba(152, 40, 32, 0.035),
     0 0 0 36px rgba(152, 40, 32, 0.025);
+  content: "";
 }
 
 .steps {
   display: grid;
-  gap: 0;
   margin: 26px 0 30px;
   padding: 0;
+  gap: 0;
   list-style: none;
 }
 
 .steps li {
   position: relative;
   display: grid;
+  padding-bottom: 24px;
   grid-template-columns: 44px 1fr;
   gap: 14px;
-  padding-bottom: 24px;
 }
 
 .steps li:last-child {
@@ -631,8 +620,8 @@ button {
   bottom: 5px;
   left: 21px;
   width: 1px;
-  content: "";
   background: rgba(197, 150, 71, 0.45);
+  content: "";
 }
 
 .step-number {
@@ -641,11 +630,11 @@ button {
   height: 34px;
   place-items: center;
   color: var(--paper);
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
   background: var(--red-800);
   border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
 }
 
 .steps strong {
@@ -673,10 +662,10 @@ button {
   display: inline-block;
   padding: 3px 8px;
   color: var(--paper);
+  font-weight: 800;
+  font-size: 0.68rem;
   background: var(--gold-700);
   border-radius: 999px;
-  font-size: 0.68rem;
-  font-weight: 800;
 }
 
 .example-card p {
@@ -700,8 +689,8 @@ button {
 }
 
 .example-card b {
-  font-family: "Noto Serif TC", "PMingLiU", serif;
   font-size: 1.5rem;
+  font-family: "Noto Serif TC", "PMingLiU", serif;
 }
 
 .scope-note {
@@ -716,8 +705,8 @@ footer {
   padding: 24px 8px 34px;
   justify-content: space-between;
   color: var(--ink-soft);
-  border-top: 1px solid rgba(92, 61, 38, 0.12);
   font-size: 0.78rem;
+  border-top: 1px solid rgba(92, 61, 38, 0.12);
 }
 
 footer p {
@@ -732,9 +721,9 @@ noscript {
   z-index: 30;
   padding: 14px 18px;
   color: #fff;
+  text-align: center;
   background: var(--error);
   border-radius: 12px;
-  text-align: center;
 }
 
 @media (max-width: 920px) {
@@ -767,8 +756,8 @@ noscript {
   }
 
   .example-card {
-    align-self: start;
     margin-top: 26px;
+    align-self: start;
   }
 }
 
@@ -778,10 +767,10 @@ noscript {
   }
 
   .hero {
-    grid-template-columns: 68px minmax(0, 1fr);
-    gap: 16px;
     min-height: auto;
     padding: 34px 3px 28px;
+    grid-template-columns: 68px minmax(0, 1fr);
+    gap: 16px;
   }
 
   .brand-seal {
@@ -807,8 +796,8 @@ noscript {
   }
 
   .hero-description {
-    grid-column: 1 / -1;
     margin-top: 16px;
+    grid-column: 1 / -1;
     font-size: 0.92rem;
   }
 
@@ -858,9 +847,9 @@ noscript {
   }
 
   footer {
-    gap: 8px;
     flex-direction: column;
     align-items: center;
+    gap: 8px;
     text-align: center;
   }
 }
@@ -880,19 +869,20 @@ noscript {
   }
 
   .root-selector-heading {
-    align-items: flex-start;
     flex-direction: column;
+    align-items: flex-start;
     gap: 4px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
   }
 }
