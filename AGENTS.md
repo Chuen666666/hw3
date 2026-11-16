@@ -12,7 +12,7 @@ This is a frontend JavaScript assignment. Unless the user explicitly expands the
 
 - Do not add PHP, a database, an API, or server-side state.
 - Do not add a frontend framework, package manager, build pipeline, or large third-party library.
-- Prefer semantic HTML, project-owned CSS, and vanilla JavaScript.
+- Prefer semantic HTML, inline project-owned CSS, and vanilla JavaScript.
 - Do not copy unrelated HW2 application features such as registration, PDF/email generation, PWA support, or Discord integration into HW3.
 
 ## Repository structure
@@ -22,53 +22,43 @@ hw3/
 ├── .gitattributes
 ├── .gitignore
 ├── AGENTS.md
-├── favicon.svg
-├── index.html
 ├── README.md
-├── css/
-│   └── style.css
-└── js/
-    └── app.js
+├── s1151538_HW3.html
+└── S1151538_HW3.js
 ```
 
-Keep asset references relative so the same files work through local XAMPP, a school-server subdirectory, and the custom domain.
+Only `s1151538_HW3.html` and `S1151538_HW3.js` are browser-facing source files. Keep their exact casing. Documentation and repository metadata may remain beside them, but do not add another HTML, CSS, JavaScript, image, font, or other public asset without explicit approval. Put all project CSS and the favicon inside the HTML file.
 
 ## Current implementation
 
-- `index.html` contains the accessible calculator interface and exactly 16 required buttons.
+- `s1151538_HW3.html` contains the accessible calculator interface, exactly 16 required buttons, all project CSS, and an inline favicon.
 - `.gitattributes` enforces LF line endings for all text files across development and deployment environments.
 - `README.md` is a concise Traditional Chinese guide for human visitors and repository readers. Keep implementation, architecture, testing, and deployment internals in this file instead of the README.
-- `css/style.css` contains the responsive Lunar New Year visual design. It has desktop, tablet, mobile, focus, and reduced-motion rules.
-- `js/app.js` contains both the family-graph evaluator and DOM interaction logic. It exposes `globalThis.KinshipEngine` so the evaluator can be tested without a browser.
-- `favicon.svg` is a repository-owned static asset; the site does not require external fonts, images, scripts, or CDNs.
+- `S1151538_HW3.js` contains both the family-graph evaluator and DOM interaction logic. It exposes `globalThis.KinshipEngine` so the evaluator can be tested without a browser.
+- The site does not require external fonts, images, stylesheets, scripts, or CDNs.
 - Automated checks are development-only. Create temporary test scripts outside the repository, run them, and remove them after validation. The ignored `tests/` path is only a safeguard against accidentally committing temporary checks.
 
-## Deployment targets
+## Deployment target
 
-This project is intended to be published to both:
+The source repository is published with Cloudflare Pages by connecting the GitHub repository directly. Cloudflare builds the production branch after a push; this project does not use a school server, XAMPP as a production origin, or Cloudflare Tunnel.
 
-- the course's school Apache server;
-- the project's GitHub repository.
-
-The public production route is:
+Use these Cloudflare Pages settings:
 
 ```text
-Browser
-  -> https://hw3.chuen666666.com/
-  -> Cloudflare Tunnel running on the school server
-  -> the school Apache origin
-  -> this static HW3 site
+Framework preset: None
+Production branch: main
+Build command: mkdir -p dist && cp s1151538_HW3.html dist/index.html && cp S1151538_HW3.js dist/S1151538_HW3.js
+Build output directory: dist
+Root directory: leave blank (repository root)
+Custom domain: hw3.chuen666666.com
 ```
 
-Cloudflare Tunnel is deployment infrastructure, not frontend application code. Keep Tunnel credentials and tokens out of this repository, and do not add Cloudflare-specific client-side scripts merely to make the route work.
-
-Keep the project portable between local XAMPP development, the school server, and GitHub:
+The build command creates Cloudflare's uncommitted `dist/` output so the required source filename can remain `s1151538_HW3.html` while the custom-domain root serves it as `index.html`. The deployed directory must contain only `index.html` and `S1151538_HW3.js`.
 
 - Use relative web paths instead of machine-specific absolute paths.
-- Treat deployed filenames and URL paths as case-sensitive because the school server may run Linux.
-- Keep all required frontend assets inside the repository unless a dependency is explicitly approved.
-- Do not commit secrets, credentials, editor state, OS metadata, or local-only configuration.
-- Preserve compatibility when the project is served from a subdirectory rather than a domain root.
+- Treat deployed filenames and URL paths as case-sensitive.
+- Keep all required frontend code in the two browser-facing source files.
+- Do not commit `dist/`, secrets, credentials, editor state, OS metadata, or local-only configuration.
 - Deployment and Git pushes are valid project tasks, but perform them only when the user explicitly requests that action.
 
 ## Required interface
@@ -331,8 +321,19 @@ The UI must require `我（男）` or `我（女）` before running any example.
 - Keep sufficient contrast in the display. Consider an appropriate ARIA live region for dynamic results.
 - Support desktop, tablet, and mobile widths without horizontal overflow.
 - Prefer Flexbox or Grid for the keypad. Avoid fixed-position layouts and manual offset hacks.
-- Put project styles in project-owned CSS. Do not edit minified third-party files for local fixes.
+- Put all project styles in the `<style>` element in `s1151538_HW3.html`; do not create a separate CSS file.
 - Prefer scoped selectors over `!important`.
+
+## Formatting and validation
+
+The developer's active VS Code global settings are the formatting source of truth. Do not add repository-local formatter, linter, workspace, package, or editor configuration merely to override them.
+
+- Format HTML and JavaScript with the globally selected Prettier extension and its global options.
+- Use four spaces, no tabs, a 120-column print width, single quotes in JavaScript, semicolons, no spaces inside object braces, no trailing commas, and parentheses around arrow-function parameters.
+- Keep HTML attribute quotes double and let Prettier format the embedded CSS.
+- Format Markdown with the globally selected Markdownlint formatter and validate it against the global Markdownlint rules.
+- Use VS Code-compatible HTML, CSS, and JavaScript language-service checks for linting and diagnostics.
+- Preserve one final newline and LF line endings in every repository text file.
 
 ## Security and stability
 
@@ -347,9 +348,12 @@ This assignment does not require collecting or transmitting personal data. If fr
 Before considering implementation or a meaningful change complete, verify:
 
 ```text
-The page loads through local XAMPP/Apache
-The page and asset URLs work when served from a project subdirectory
-Filename casing is compatible with the school server
+The source page loads through a local static server
+The Cloudflare build command creates only dist/index.html and dist/S1151538_HW3.js
+The built page loads at the deployment root
+Source and deployed filename casing is exact
+The repository has exactly two browser-facing source files
+CSS and the favicon are embedded in s1151538_HW3.html
 All 16 required buttons exist and work
 Exactly one of 我（男） and 我（女） can be selected at a time
 Relationship and = buttons remain disabled until root gender is selected
@@ -367,7 +371,7 @@ Empty or incomplete input does not crash the application
 Desktop, tablet, and mobile layouts remain usable
 Every button is keyboard accessible
 DevTools Console has no unexpected errors
-CSS, JavaScript, and image requests do not return 404
+The JavaScript request does not return 404 and no external CSS or image is requested
 Idle display text is visually distinct from a successful kinship answer
 ```
 
@@ -390,10 +394,10 @@ The demo has 10 questions worth 10 points each. Invalid or missing program answe
 ## Guidance for coding agents
 
 - Read this `AGENTS.md` first whenever working in this repository.
-- Inspect existing HTML, CSS, and JavaScript before implementation; do not assume the directory is still empty.
+- Inspect the existing HTML and JavaScript before implementation; do not assume the directory is still empty.
 - Use only the requirements and canonical relationship vocabulary in this file.
 - If a title cannot be established from this specification, report the missing rule instead of guessing.
 - Keep development-only tests outside the repository and remove them after use; do not ship test files with the static site.
-- Keep the project ready for GitHub and school-server deployment. Push or upload only when the user explicitly requests it.
+- Keep the project ready for GitHub-connected Cloudflare Pages deployment. Push only when the user explicitly requests it.
 - Do not write into HW2 unless the user explicitly requests a cross-project change.
 - After changes, report which files changed, which acceptance examples were verified, and any remaining limitations.
