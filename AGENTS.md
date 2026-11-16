@@ -60,6 +60,7 @@ The interface has exactly 16 buttons:
 - A short press on `返回` undoes exactly one action without clearing the selected gender.
 - Holding `返回` for about 700 ms clears the relationship path, result, and history while preserving gender.
 - Long press must work with pointer, touch, Enter, and Space without also triggering a short back action.
+- Enter and Space repeat events must prevent browser defaults without restarting the long-press timer or causing extra back actions.
 - Preserve the existing family-graph evaluator, supported titles, gender rules, parental side, marriage direction, and older/younger distinctions.
 - Great-grandparent generations, consecutive sibling steps, and unsupported same-sex spouse paths are outside the assignment scope.
 - Do not use `eval()`, infer a missing gender, or replace the evaluator with a few hard-coded full strings.

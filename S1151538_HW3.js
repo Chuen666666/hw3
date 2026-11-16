@@ -564,19 +564,25 @@
     });
 
     elements.backButton.addEventListener('keydown', function (event) {
-        if (!['Enter', ' '].includes(event.key) || event.repeat) {
+        if (!['Enter', ' '].includes(event.key)) {
             return;
         }
         event.preventDefault();
+        if (event.repeat || keyboardPressActive) {
+            return;
+        }
         keyboardPressActive = true;
         startBackPress();
     });
 
     elements.backButton.addEventListener('keyup', function (event) {
-        if (!['Enter', ' '].includes(event.key) || !keyboardPressActive) {
+        if (!['Enter', ' '].includes(event.key)) {
             return;
         }
         event.preventDefault();
+        if (!keyboardPressActive) {
+            return;
+        }
         const wasLongPress = longPressTriggered;
         keyboardPressActive = false;
         endBackPress();
