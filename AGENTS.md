@@ -48,7 +48,7 @@ The interface has exactly 16 buttons:
 - `我（男）` and `我（女）` are one required, mutually exclusive choice.
 - Relationship buttons and `=` stay disabled until a gender is selected.
 - The hero description is exactly `「叫人啊，看到人都不會叫喔？」`.
-- The how-to panel may show a relationship and answer, but do not display a `範例` label or the removed scope disclaimer.
+- The how-to panel contains only the three usage steps; do not add a separate example card or the removed scope disclaimer.
 - Preserve semantic buttons, keyboard access, visible focus, sufficient contrast, and responsive layouts without horizontal overflow.
 - Idle text such as `等待輸入` must remain visually distinct from a successful answer.
 
