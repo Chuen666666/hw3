@@ -670,9 +670,10 @@
     });
     elements.evaluateButton.disabled = !hasRoot;
 
-    elements.result.classList.remove("is-success", "is-error");
+    elements.result.classList.remove("is-idle", "is-success", "is-error");
     if (!state.result) {
       elements.result.textContent = hasRoot ? "等待輸入" : "尚未選擇視角";
+      elements.result.classList.add("is-idle");
       return;
     }
 

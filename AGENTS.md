@@ -19,6 +19,7 @@ This is a frontend JavaScript assignment. Unless the user explicitly expands the
 
 ```text
 hw3/
+├── .gitattributes
 ├── .gitignore
 ├── AGENTS.md
 ├── favicon.svg
@@ -35,6 +36,7 @@ Keep asset references relative so the same files work through local XAMPP, a sch
 ## Current implementation
 
 - `index.html` contains the accessible calculator interface and exactly 16 required buttons.
+- `.gitattributes` enforces LF line endings for all text files across development and deployment environments.
 - `README.md` is a concise Traditional Chinese guide for human visitors and repository readers. Keep implementation, architecture, testing, and deployment internals in this file instead of the README.
 - `css/style.css` contains the responsive Lunar New Year visual design. It has desktop, tablet, mobile, focus, and reduced-motion rules.
 - `js/app.js` contains both the family-graph evaluator and DOM interaction logic. It exposes `globalThis.KinshipEngine` so the evaluator can be tested without a browser.
@@ -72,6 +74,8 @@ Keep the project portable between local XAMPP development, the school server, an
 ## Required interface
 
 The page needs a display area similar to a calculator screen. It shows the relationship path while the user is entering it and the final answer after `=` is pressed.
+
+Idle states such as `等待輸入` and `尚未選擇視角` must use subdued status styling. A successfully resolved kinship title must use a clearly different, prominent color, typeface, size, and weight so users can distinguish status from answer at a glance.
 
 The assignment has exactly **16 buttons**:
 
@@ -364,6 +368,7 @@ Desktop, tablet, and mobile layouts remain usable
 Every button is keyboard accessible
 DevTools Console has no unexpected errors
 CSS, JavaScript, and image requests do not return 404
+Idle display text is visually distinct from a successful kinship answer
 ```
 
 The demo has 10 questions worth 10 points each. Invalid or missing program answers receive no credit. The bonus condition is a top-10% demo result with an original score of at least 90, so correctness and reliability take priority over decorative features.
@@ -380,6 +385,7 @@ The demo has 10 questions worth 10 points each. Invalid or missing program answe
 8. Prefer readable, reviewable rules over clever abstractions.
 9. If this specification is internally ambiguous, preserve compatible behavior and explain the ambiguity instead of silently inventing a rule.
 10. Preserve user changes unrelated to the active task.
+11. Keep all repository text files normalized to LF; do not commit CRLF line endings.
 
 ## Guidance for coding agents
 
