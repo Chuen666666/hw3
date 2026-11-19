@@ -20,9 +20,8 @@
     const graphCache = new Map();
 
     function buildGraph(rootGender) {
-        if (!VALID_GENDERS.has(rootGender)) {
+        if (!VALID_GENDERS.has(rootGender))
             throw new TypeError('rootGender must be male or female');
-        }
 
         const people = new Map();
 
@@ -61,14 +60,15 @@
                 person(prefix + '-older-son', 'male', familyType + '兄'),
                 person(prefix + '-older-daughter', 'female', familyType + '姊'),
                 person(prefix + '-younger-son', 'male', familyType + '弟'),
-                person(prefix + '-younger-daughter', 'female', familyType + '妹')
+                person(
+                    prefix + '-younger-daughter',
+                    'female',
+                    familyType + '妹'
+                )
             ];
 
-            if (adult.gender === 'male') {
-                family(adult, spouse, children);
-            } else {
-                family(spouse, adult, children);
-            }
+            if (adult.gender === 'male') family(adult, spouse, children);
+            else family(spouse, adult, children);
         }
 
         function addNiblings(prefix, adult, spouse, maleTitle, femaleTitle) {
@@ -77,11 +77,8 @@
                 person(prefix + '-daughter', 'female', femaleTitle)
             ];
 
-            if (adult.gender === 'male') {
-                family(adult, spouse, children);
-            } else {
-                family(spouse, adult, children);
-            }
+            if (adult.gender === 'male') family(adult, spouse, children);
+            else family(spouse, adult, children);
         }
 
         const root = person('root', rootGender, '我');
@@ -92,23 +89,89 @@
         const youngerBrother = person('younger-brother', 'male', '弟弟');
         const youngerSister = person('younger-sister', 'female', '妹妹');
 
-        family(father, mother, [olderBrother, olderSister, root, youngerBrother, youngerSister]);
+        family(father, mother, [
+            olderBrother,
+            olderSister,
+            root,
+            youngerBrother,
+            youngerSister
+        ]);
 
         const olderBrotherWife = person('older-brother-wife', 'female', '嫂嫂');
-        const youngerBrotherWife = person('younger-brother-wife', 'female', '弟媳');
-        const olderSisterHusband = person('older-sister-husband', 'male', '姊夫');
-        const youngerSisterHusband = person('younger-sister-husband', 'male', '妹夫');
-        addNiblings('older-brother', olderBrother, olderBrotherWife, '姪子', '姪女');
-        addNiblings('younger-brother', youngerBrother, youngerBrotherWife, '姪子', '姪女');
-        addNiblings('older-sister', olderSister, olderSisterHusband, '外甥', '外甥女');
-        addNiblings('younger-sister', youngerSister, youngerSisterHusband, '外甥', '外甥女');
+        const youngerBrotherWife = person(
+            'younger-brother-wife',
+            'female',
+            '弟媳'
+        );
+        const olderSisterHusband = person(
+            'older-sister-husband',
+            'male',
+            '姊夫'
+        );
+        const youngerSisterHusband = person(
+            'younger-sister-husband',
+            'male',
+            '妹夫'
+        );
+        addNiblings(
+            'older-brother',
+            olderBrother,
+            olderBrotherWife,
+            '姪子',
+            '姪女'
+        );
+        addNiblings(
+            'younger-brother',
+            youngerBrother,
+            youngerBrotherWife,
+            '姪子',
+            '姪女'
+        );
+        addNiblings(
+            'older-sister',
+            olderSister,
+            olderSisterHusband,
+            '外甥',
+            '外甥女'
+        );
+        addNiblings(
+            'younger-sister',
+            youngerSister,
+            youngerSisterHusband,
+            '外甥',
+            '外甥女'
+        );
 
-        const paternalGrandfather = person('paternal-grandfather', 'male', '祖父');
-        const paternalGrandmother = person('paternal-grandmother', 'female', '祖母');
-        const paternalOlderAunt = person('paternal-older-aunt', 'female', '姑媽');
-        const paternalOlderUncle = person('paternal-older-uncle', 'male', '伯父');
-        const paternalYoungerUncle = person('paternal-younger-uncle', 'male', '叔父');
-        const paternalYoungerAunt = person('paternal-younger-aunt', 'female', '姑媽');
+        const paternalGrandfather = person(
+            'paternal-grandfather',
+            'male',
+            '祖父'
+        );
+        const paternalGrandmother = person(
+            'paternal-grandmother',
+            'female',
+            '祖母'
+        );
+        const paternalOlderAunt = person(
+            'paternal-older-aunt',
+            'female',
+            '姑媽'
+        );
+        const paternalOlderUncle = person(
+            'paternal-older-uncle',
+            'male',
+            '伯父'
+        );
+        const paternalYoungerUncle = person(
+            'paternal-younger-uncle',
+            'male',
+            '叔父'
+        );
+        const paternalYoungerAunt = person(
+            'paternal-younger-aunt',
+            'female',
+            '姑媽'
+        );
         family(paternalGrandfather, paternalGrandmother, [
             paternalOlderAunt,
             paternalOlderUncle,
@@ -117,21 +180,81 @@
             paternalYoungerAunt
         ]);
 
-        const paternalOlderUncleWife = person('paternal-older-uncle-wife', 'female', '伯母');
-        const paternalYoungerUncleWife = person('paternal-younger-uncle-wife', 'female', '嬸嬸');
-        const paternalOlderAuntHusband = person('paternal-older-aunt-husband', 'male', '姑丈');
-        const paternalYoungerAuntHusband = person('paternal-younger-aunt-husband', 'male', '姑丈');
-        addFourCousins('paternal-older-uncle', paternalOlderUncle, paternalOlderUncleWife, '堂');
-        addFourCousins('paternal-younger-uncle', paternalYoungerUncle, paternalYoungerUncleWife, '堂');
-        addFourCousins('paternal-older-aunt', paternalOlderAunt, paternalOlderAuntHusband, '表');
-        addFourCousins('paternal-younger-aunt', paternalYoungerAunt, paternalYoungerAuntHusband, '表');
+        const paternalOlderUncleWife = person(
+            'paternal-older-uncle-wife',
+            'female',
+            '伯母'
+        );
+        const paternalYoungerUncleWife = person(
+            'paternal-younger-uncle-wife',
+            'female',
+            '嬸嬸'
+        );
+        const paternalOlderAuntHusband = person(
+            'paternal-older-aunt-husband',
+            'male',
+            '姑丈'
+        );
+        const paternalYoungerAuntHusband = person(
+            'paternal-younger-aunt-husband',
+            'male',
+            '姑丈'
+        );
+        addFourCousins(
+            'paternal-older-uncle',
+            paternalOlderUncle,
+            paternalOlderUncleWife,
+            '堂'
+        );
+        addFourCousins(
+            'paternal-younger-uncle',
+            paternalYoungerUncle,
+            paternalYoungerUncleWife,
+            '堂'
+        );
+        addFourCousins(
+            'paternal-older-aunt',
+            paternalOlderAunt,
+            paternalOlderAuntHusband,
+            '表'
+        );
+        addFourCousins(
+            'paternal-younger-aunt',
+            paternalYoungerAunt,
+            paternalYoungerAuntHusband,
+            '表'
+        );
 
-        const maternalGrandfather = person('maternal-grandfather', 'male', '外祖父');
-        const maternalGrandmother = person('maternal-grandmother', 'female', '外祖母');
-        const maternalOlderAunt = person('maternal-older-aunt', 'female', '姨媽');
-        const maternalOlderUncle = person('maternal-older-uncle', 'male', '舅舅');
-        const maternalYoungerUncle = person('maternal-younger-uncle', 'male', '舅舅');
-        const maternalYoungerAunt = person('maternal-younger-aunt', 'female', '姨媽');
+        const maternalGrandfather = person(
+            'maternal-grandfather',
+            'male',
+            '外祖父'
+        );
+        const maternalGrandmother = person(
+            'maternal-grandmother',
+            'female',
+            '外祖母'
+        );
+        const maternalOlderAunt = person(
+            'maternal-older-aunt',
+            'female',
+            '姨媽'
+        );
+        const maternalOlderUncle = person(
+            'maternal-older-uncle',
+            'male',
+            '舅舅'
+        );
+        const maternalYoungerUncle = person(
+            'maternal-younger-uncle',
+            'male',
+            '舅舅'
+        );
+        const maternalYoungerAunt = person(
+            'maternal-younger-aunt',
+            'female',
+            '姨媽'
+        );
         family(maternalGrandfather, maternalGrandmother, [
             maternalOlderAunt,
             maternalOlderUncle,
@@ -140,24 +263,88 @@
             maternalYoungerAunt
         ]);
 
-        const maternalOlderUncleWife = person('maternal-older-uncle-wife', 'female', '舅媽');
-        const maternalYoungerUncleWife = person('maternal-younger-uncle-wife', 'female', '舅媽');
-        const maternalOlderAuntHusband = person('maternal-older-aunt-husband', 'male', '姨丈');
-        const maternalYoungerAuntHusband = person('maternal-younger-aunt-husband', 'male', '姨丈');
-        addFourCousins('maternal-older-uncle', maternalOlderUncle, maternalOlderUncleWife, '表');
-        addFourCousins('maternal-younger-uncle', maternalYoungerUncle, maternalYoungerUncleWife, '表');
-        addFourCousins('maternal-older-aunt', maternalOlderAunt, maternalOlderAuntHusband, '表');
-        addFourCousins('maternal-younger-aunt', maternalYoungerAunt, maternalYoungerAuntHusband, '表');
+        const maternalOlderUncleWife = person(
+            'maternal-older-uncle-wife',
+            'female',
+            '舅媽'
+        );
+        const maternalYoungerUncleWife = person(
+            'maternal-younger-uncle-wife',
+            'female',
+            '舅媽'
+        );
+        const maternalOlderAuntHusband = person(
+            'maternal-older-aunt-husband',
+            'male',
+            '姨丈'
+        );
+        const maternalYoungerAuntHusband = person(
+            'maternal-younger-aunt-husband',
+            'male',
+            '姨丈'
+        );
+        addFourCousins(
+            'maternal-older-uncle',
+            maternalOlderUncle,
+            maternalOlderUncleWife,
+            '表'
+        );
+        addFourCousins(
+            'maternal-younger-uncle',
+            maternalYoungerUncle,
+            maternalYoungerUncleWife,
+            '表'
+        );
+        addFourCousins(
+            'maternal-older-aunt',
+            maternalOlderAunt,
+            maternalOlderAuntHusband,
+            '表'
+        );
+        addFourCousins(
+            'maternal-younger-aunt',
+            maternalYoungerAunt,
+            maternalYoungerAuntHusband,
+            '表'
+        );
 
         const spouseGender = rootGender === 'male' ? 'female' : 'male';
-        const spouse = person('spouse', spouseGender, rootGender === 'male' ? '妻' : '夫');
+        const spouse = person(
+            'spouse',
+            spouseGender,
+            rootGender === 'male' ? '妻' : '夫'
+        );
         const spousePrefix = rootGender === 'male' ? '妻' : '夫';
-        const spouseFather = person('spouse-father', 'male', spousePrefix + '父');
-        const spouseMother = person('spouse-mother', 'female', spousePrefix + '母');
-        const spouseOlderBrother = person('spouse-older-brother', 'male', spousePrefix + '兄');
-        const spouseOlderSister = person('spouse-older-sister', 'female', spousePrefix + '姊');
-        const spouseYoungerBrother = person('spouse-younger-brother', 'male', spousePrefix + '弟');
-        const spouseYoungerSister = person('spouse-younger-sister', 'female', spousePrefix + '妹');
+        const spouseFather = person(
+            'spouse-father',
+            'male',
+            spousePrefix + '父'
+        );
+        const spouseMother = person(
+            'spouse-mother',
+            'female',
+            spousePrefix + '母'
+        );
+        const spouseOlderBrother = person(
+            'spouse-older-brother',
+            'male',
+            spousePrefix + '兄'
+        );
+        const spouseOlderSister = person(
+            'spouse-older-sister',
+            'female',
+            spousePrefix + '姊'
+        );
+        const spouseYoungerBrother = person(
+            'spouse-younger-brother',
+            'male',
+            spousePrefix + '弟'
+        );
+        const spouseYoungerSister = person(
+            'spouse-younger-sister',
+            'female',
+            spousePrefix + '妹'
+        );
         family(spouseFather, spouseMother, [
             spouseOlderBrother,
             spouseOlderSister,
@@ -166,66 +353,132 @@
             spouseYoungerSister
         ]);
 
-        const spouseOlderBrotherWife = person('spouse-older-brother-wife', 'female', spousePrefix + '兄嫂');
-        const spouseYoungerBrotherWife = person('spouse-younger-brother-wife', 'female', spousePrefix + '弟媳');
-        const spouseOlderSisterHusband = person('spouse-older-sister-husband', 'male', spousePrefix + '姊夫');
-        const spouseYoungerSisterHusband = person('spouse-younger-sister-husband', 'male', spousePrefix + '妹夫');
-        addNiblings('spouse-older-brother', spouseOlderBrother, spouseOlderBrotherWife, '外甥', '外甥女');
-        addNiblings('spouse-younger-brother', spouseYoungerBrother, spouseYoungerBrotherWife, '外甥', '外甥女');
-        addNiblings('spouse-older-sister', spouseOlderSister, spouseOlderSisterHusband, '外甥', '外甥女');
-        addNiblings('spouse-younger-sister', spouseYoungerSister, spouseYoungerSisterHusband, '外甥', '外甥女');
+        const spouseOlderBrotherWife = person(
+            'spouse-older-brother-wife',
+            'female',
+            spousePrefix + '兄嫂'
+        );
+        const spouseYoungerBrotherWife = person(
+            'spouse-younger-brother-wife',
+            'female',
+            spousePrefix + '弟媳'
+        );
+        const spouseOlderSisterHusband = person(
+            'spouse-older-sister-husband',
+            'male',
+            spousePrefix + '姊夫'
+        );
+        const spouseYoungerSisterHusband = person(
+            'spouse-younger-sister-husband',
+            'male',
+            spousePrefix + '妹夫'
+        );
+        addNiblings(
+            'spouse-older-brother',
+            spouseOlderBrother,
+            spouseOlderBrotherWife,
+            '外甥',
+            '外甥女'
+        );
+        addNiblings(
+            'spouse-younger-brother',
+            spouseYoungerBrother,
+            spouseYoungerBrotherWife,
+            '外甥',
+            '外甥女'
+        );
+        addNiblings(
+            'spouse-older-sister',
+            spouseOlderSister,
+            spouseOlderSisterHusband,
+            '外甥',
+            '外甥女'
+        );
+        addNiblings(
+            'spouse-younger-sister',
+            spouseYoungerSister,
+            spouseYoungerSisterHusband,
+            '外甥',
+            '外甥女'
+        );
 
         const olderSon = person('older-son', 'male', '兒子');
         const olderDaughter = person('older-daughter', 'female', '女兒');
         const youngerSon = person('younger-son', 'male', '兒子');
         const youngerDaughter = person('younger-daughter', 'female', '女兒');
 
-        if (rootGender === 'male') {
-            family(root, spouse, [olderSon, olderDaughter, youngerSon, youngerDaughter]);
-        } else {
-            family(spouse, root, [olderSon, olderDaughter, youngerSon, youngerDaughter]);
-        }
+        if (rootGender === 'male')
+            family(root, spouse, [
+                olderSon,
+                olderDaughter,
+                youngerSon,
+                youngerDaughter
+            ]);
+        else
+            family(spouse, root, [
+                olderSon,
+                olderDaughter,
+                youngerSon,
+                youngerDaughter
+            ]);
 
         [olderSon, youngerSon].forEach(function (son, index) {
             const wife = person('son-' + index + '-wife', 'female', '媳婦');
             const grandson = person('son-' + index + '-son', 'male', '孫子');
-            const granddaughter = person('son-' + index + '-daughter', 'female', '孫女');
+            const granddaughter = person(
+                'son-' + index + '-daughter',
+                'female',
+                '孫女'
+            );
             family(son, wife, [grandson, granddaughter]);
         });
 
         [olderDaughter, youngerDaughter].forEach(function (daughter, index) {
-            const husband = person('daughter-' + index + '-husband', 'male', '女婿');
-            const externalGrandson = person('daughter-' + index + '-son', 'male', '外孫');
-            const externalGranddaughter = person('daughter-' + index + '-daughter', 'female', '外孫');
-            family(husband, daughter, [externalGrandson, externalGranddaughter]);
+            const husband = person(
+                'daughter-' + index + '-husband',
+                'male',
+                '女婿'
+            );
+            const externalGrandson = person(
+                'daughter-' + index + '-son',
+                'male',
+                '外孫'
+            );
+            const externalGranddaughter = person(
+                'daughter-' + index + '-daughter',
+                'female',
+                '外孫'
+            );
+            family(husband, daughter, [
+                externalGrandson,
+                externalGranddaughter
+            ]);
         });
 
         return {root, people};
     }
 
     function getGraph(gender) {
-        if (!graphCache.has(gender)) {
-            graphCache.set(gender, buildGraph(gender));
-        }
+        if (!graphCache.has(gender)) graphCache.set(gender, buildGraph(gender));
         return graphCache.get(gender);
     }
 
     function findSibling(person, gender, direction) {
-        if (person.birthOrder === null || !person.siblings.length) {
-            return null;
-        }
+        if (person.birthOrder === null || !person.siblings.length) return null;
 
         const candidates = person.siblings.filter(function (candidate) {
-            if (candidate === person || candidate.gender !== gender) {
+            if (candidate === person || candidate.gender !== gender)
                 return false;
-            }
+
             return direction === 'older'
                 ? candidate.birthOrder < person.birthOrder
                 : candidate.birthOrder > person.birthOrder;
         });
 
         candidates.sort(function (a, b) {
-            return direction === 'older' ? b.birthOrder - a.birthOrder : a.birthOrder - b.birthOrder;
+            return direction === 'older'
+                ? b.birthOrder - a.birthOrder
+                : a.birthOrder - b.birthOrder;
         });
 
         return candidates[0] || null;
@@ -240,11 +493,11 @@
                 return a.birthOrder - b.birthOrder;
             });
 
-        if (!candidates.length) {
-            return null;
-        }
+        if (!candidates.length) return null;
 
-        return direction === 'older' ? candidates[0] : candidates[candidates.length - 1];
+        return direction === 'older'
+            ? candidates[0]
+            : candidates[candidates.length - 1];
     }
 
     function follow(person, relation) {
@@ -254,11 +507,15 @@
             case 'mother':
                 return person.mother;
             case 'husband':
-                return person.gender === 'female' && person.spouse && person.spouse.gender === 'male'
+                return person.gender === 'female' &&
+                    person.spouse &&
+                    person.spouse.gender === 'male'
                     ? person.spouse
                     : null;
             case 'wife':
-                return person.gender === 'male' && person.spouse && person.spouse.gender === 'female'
+                return person.gender === 'male' &&
+                    person.spouse &&
+                    person.spouse.gender === 'female'
                     ? person.spouse
                     : null;
             case 'olderBrother':
@@ -287,9 +544,7 @@
 
         for (const relation of steps) {
             current = follow(current, relation);
-            if (!current) {
-                return null;
-            }
+            if (!current) return null;
         }
 
         return current;
@@ -344,9 +599,7 @@
     function buildExpression(steps, rootGender) {
         const rootLabel = rootGender === 'male' ? '我（男）' : '我（女）';
 
-        if (!steps.length) {
-            return rootLabel;
-        }
+        if (!steps.length) return rootLabel;
 
         return (
             rootLabel +
@@ -365,9 +618,7 @@
         relationLabels: RELATION_LABELS
     });
 
-    if (typeof document === 'undefined') {
-        return;
-    }
+    if (typeof document === 'undefined') return;
 
     const elements = {
         expression: document.getElementById('expression'),
@@ -377,7 +628,9 @@
         rootRequiredMessage: document.getElementById('root-required-message'),
         interactionStatus: document.getElementById('interaction-status'),
         rootButtons: Array.from(document.querySelectorAll('[data-root]')),
-        relationButtons: Array.from(document.querySelectorAll('[data-relation]')),
+        relationButtons: Array.from(
+            document.querySelectorAll('[data-relation]')
+        ),
         evaluateButton: document.querySelector('[data-action="evaluate"]'),
         backButton: document.querySelector('[data-action="back"]')
     };
@@ -404,9 +657,7 @@
 
     function performAction(change) {
         history.push(cloneState());
-        if (history.length > 100) {
-            history.shift();
-        }
+        if (history.length > 100) history.shift();
         change();
         render();
     }
@@ -429,11 +680,16 @@
                   ? '視角：我（女）'
                   : '視角：尚未選擇';
 
-        elements.rootRequiredMessage.textContent = hasRoot ? '已完成選擇' : '請選擇其中一項';
+        elements.rootRequiredMessage.textContent = hasRoot
+            ? '已完成選擇'
+            : '請選擇其中一項';
         elements.rootRequiredMessage.classList.toggle('is-complete', hasRoot);
 
         elements.rootButtons.forEach(function (button) {
-            button.setAttribute('aria-checked', String(button.dataset.root === state.rootGender));
+            button.setAttribute(
+                'aria-checked',
+                String(button.dataset.root === state.rootGender)
+            );
         });
 
         elements.relationButtons.forEach(function (button) {
@@ -459,9 +715,8 @@
 
     elements.relationButtons.forEach(function (button) {
         button.addEventListener('click', function () {
-            if (!VALID_GENDERS.has(state.rootGender)) {
-                return;
-            }
+            if (!VALID_GENDERS.has(state.rootGender)) return;
+
             performAction(function () {
                 state.steps.push(button.dataset.relation);
                 state.result = null;
@@ -479,9 +734,13 @@
         });
 
         button.addEventListener('keydown', function (event) {
-            if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+            if (
+                !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(
+                    event.key
+                )
+            )
                 return;
-            }
+
             event.preventDefault();
             const nextButton = elements.rootButtons.find(function (candidate) {
                 return candidate !== button;
@@ -492,9 +751,8 @@
     });
 
     elements.evaluateButton.addEventListener('click', function () {
-        if (!VALID_GENDERS.has(state.rootGender)) {
-            return;
-        }
+        if (!VALID_GENDERS.has(state.rootGender)) return;
+
         performAction(function () {
             state.result = evaluate(state.steps, state.rootGender);
         });
@@ -504,7 +762,9 @@
         if (!history.length) {
             state.result = {
                 ok: false,
-                code: VALID_GENDERS.has(state.rootGender) ? 'no-history' : 'gender-required',
+                code: VALID_GENDERS.has(state.rootGender)
+                    ? 'no-history'
+                    : 'gender-required',
                 message: VALID_GENDERS.has(state.rootGender)
                     ? '目前沒有可以返回的步驟'
                     : '請先選擇「我（男）」或「我（女）」'
@@ -542,20 +802,19 @@
     }
 
     elements.backButton.addEventListener('pointerdown', function (event) {
-        if (event.button !== 0) {
-            return;
-        }
+        if (event.button !== 0) return;
         startBackPress();
     });
 
-    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (eventName) {
-        elements.backButton.addEventListener(eventName, endBackPress);
-    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(
+        function (eventName) {
+            elements.backButton.addEventListener(eventName, endBackPress);
+        }
+    );
 
     elements.backButton.addEventListener('click', function (event) {
-        if (suppressKeyboardClick && event.detail === 0) {
-            return;
-        }
+        if (suppressKeyboardClick && event.detail === 0) return;
+
         if (longPressTriggered) {
             longPressTriggered = false;
             return;
@@ -564,25 +823,21 @@
     });
 
     elements.backButton.addEventListener('keydown', function (event) {
-        if (!['Enter', ' '].includes(event.key)) {
-            return;
-        }
+        if (!['Enter', ' '].includes(event.key)) return;
+
         event.preventDefault();
-        if (event.repeat || keyboardPressActive) {
-            return;
-        }
+        if (event.repeat || keyboardPressActive) return;
+
         keyboardPressActive = true;
         startBackPress();
     });
 
     elements.backButton.addEventListener('keyup', function (event) {
-        if (!['Enter', ' '].includes(event.key)) {
-            return;
-        }
+        if (!['Enter', ' '].includes(event.key)) return;
+
         event.preventDefault();
-        if (!keyboardPressActive) {
-            return;
-        }
+        if (!keyboardPressActive) return;
+
         const wasLongPress = longPressTriggered;
         keyboardPressActive = false;
         endBackPress();
