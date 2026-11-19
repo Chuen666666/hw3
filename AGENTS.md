@@ -23,6 +23,7 @@ hw3/
 - Keep all CSS and the favicon inside the HTML file.
 - Do not add a framework, package manager, backend, external asset, or CDN without explicit approval.
 - Keep README.md human-facing; implementation and deployment notes belong here.
+- Keep README.md's Mermaid flowchart synchronized with user-visible interaction behavior.
 
 ## Interface and content
 
@@ -97,7 +98,7 @@ Custom domain: hw3.chuen666666.com
 ## Formatting and verification
 
 - Use the active VS Code global formatting and lint settings; do not add repository-local formatter or linter configuration.
-- HTML and JavaScript use the global Prettier settings: four spaces, no tabs, 120-column width, single quotes in JavaScript, semicolons, no object-brace spacing, no trailing commas, and arrow-parameter parentheses.
+- HTML and JavaScript use Prettier with four spaces and no tabs. HTML uses a 120-column width; JavaScript overrides it to 80 columns and uses single quotes, semicolons, no object-brace spacing, no trailing commas, and arrow-parameter parentheses.
 - Markdown uses the global Markdownlint settings.
 - Keep every repository text file LF-only with one final newline.
 - Development-only checks stay outside the repository and are removed afterward.
