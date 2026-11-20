@@ -707,7 +707,8 @@
         if (state.result.ok) {
             elements.result.textContent = state.result.title;
             elements.result.classList.add('is-success');
-        } else {
+        }
+        else {
             elements.result.textContent = state.result.message;
             elements.result.classList.add('is-error');
         }
