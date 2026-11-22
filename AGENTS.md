@@ -98,8 +98,7 @@ Custom domain: hw3.chuen666666.com
 ## Formatting and verification
 
 - Use the active VS Code global formatting and lint settings; do not add repository-local formatter or linter configuration.
-- HTML and JavaScript use Prettier with four spaces and no tabs. HTML uses a 120-column width; JavaScript overrides it to 80 columns and uses single quotes, semicolons, no object-brace spacing, no trailing commas, and arrow-parameter parentheses.
-- Markdown uses the global Markdownlint settings.
+- Format and lint changed files with those settings before pushing.
 - Keep every repository text file LF-only with one final newline.
 - Development-only checks stay outside the repository and are removed afterward.
 

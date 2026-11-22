@@ -46,7 +46,7 @@
             father.children = children;
             mother.children = children;
 
-            children.forEach(function (child, index) {
+            children.forEach((child, index) => {
                 child.father = father;
                 child.mother = mother;
                 child.siblings = children;
@@ -175,14 +175,14 @@
         if (rootGender === 'male') family(root, spouse, [olderSon, olderDaughter, youngerSon, youngerDaughter]);
         else family(spouse, root, [olderSon, olderDaughter, youngerSon, youngerDaughter]);
 
-        [olderSon, youngerSon].forEach(function (son, index) {
+        [olderSon, youngerSon].forEach((son, index) => {
             const wife = person('son-' + index + '-wife', 'female', '媳婦');
             const grandson = person('son-' + index + '-son', 'male', '孫子');
             const granddaughter = person('son-' + index + '-daughter', 'female', '孫女');
             family(son, wife, [grandson, granddaughter]);
         });
 
-        [olderDaughter, youngerDaughter].forEach(function (daughter, index) {
+        [olderDaughter, youngerDaughter].forEach((daughter, index) => {
             const husband = person('daughter-' + index + '-husband', 'male', '女婿');
             const externalGrandson = person('daughter-' + index + '-son', 'male', '外孫');
             const externalGranddaughter = person('daughter-' + index + '-daughter', 'female', '外孫');
@@ -200,7 +200,7 @@
     function findSibling(person, gender, direction) {
         if (person.birthOrder === null || !person.siblings.length) return null;
 
-        const candidates = person.siblings.filter(function (candidate) {
+        const candidates = person.siblings.filter((candidate) => {
             if (candidate === person || candidate.gender !== gender) return false;
 
             return direction === 'older'
@@ -208,7 +208,7 @@
                 : candidate.birthOrder > person.birthOrder;
         });
 
-        candidates.sort(function (a, b) {
+        candidates.sort((a, b) => {
             return direction === 'older' ? b.birthOrder - a.birthOrder : a.birthOrder - b.birthOrder;
         });
 
@@ -217,12 +217,8 @@
 
     function findChild(person, gender, direction) {
         const candidates = person.children
-            .filter(function (child) {
-                return child.gender === gender;
-            })
-            .sort(function (a, b) {
-                return a.birthOrder - b.birthOrder;
-            });
+            .filter((child) => child.gender === gender)
+            .sort((a, b) => a.birthOrder - b.birthOrder);
 
         if (!candidates.length) return null;
 
@@ -292,11 +288,7 @@
             };
         }
 
-        if (
-            steps.some(function (step) {
-                return !Object.hasOwn(RELATION_LABELS, step);
-            })
-        ) {
+        if (steps.some((step) => !Object.hasOwn(RELATION_LABELS, step))) {
             return {
                 ok: false,
                 code: 'invalid-step',
@@ -326,15 +318,7 @@
 
         if (!steps.length) return rootLabel;
 
-        return (
-            rootLabel +
-            '的' +
-            steps
-                .map(function (step) {
-                    return RELATION_LABELS[step];
-                })
-                .join('的')
-        );
+        return rootLabel + '的' + steps.map((step) => RELATION_LABELS[step]).join('的');
     }
 
     global.KinshipEngine = Object.freeze({
@@ -406,11 +390,11 @@
         elements.rootRequiredMessage.textContent = hasRoot ? '已完成選擇' : '請選擇其中一項';
         elements.rootRequiredMessage.classList.toggle('is-complete', hasRoot);
 
-        elements.rootButtons.forEach(function (button) {
+        elements.rootButtons.forEach((button) => {
             button.setAttribute('aria-checked', String(button.dataset.root === state.rootGender));
         });
 
-        elements.relationButtons.forEach(function (button) {
+        elements.relationButtons.forEach((button) => {
             button.disabled = !hasRoot;
         });
         elements.evaluateButton.disabled = !hasRoot;
@@ -425,26 +409,25 @@
         if (state.result.ok) {
             elements.result.textContent = state.result.title;
             elements.result.classList.add('is-success');
-        }
-        else {
+        } else {
             elements.result.textContent = state.result.message;
             elements.result.classList.add('is-error');
         }
     }
 
-    elements.relationButtons.forEach(function (button) {
-        button.addEventListener('click', function () {
+    elements.relationButtons.forEach((button) => {
+        button.addEventListener('click', () => {
             if (!VALID_GENDERS.has(state.rootGender)) return;
 
-            performAction(function () {
+            performAction(() => {
                 state.steps.push(button.dataset.relation);
                 state.result = null;
             });
         });
     });
 
-    elements.rootButtons.forEach(function (button) {
-        button.addEventListener('click', function () {
+    elements.rootButtons.forEach((button) => {
+        button.addEventListener('click', () => {
             state.rootGender = button.dataset.root;
             state.steps = [];
             state.result = null;
@@ -452,22 +435,20 @@
             render();
         });
 
-        button.addEventListener('keydown', function (event) {
+        button.addEventListener('keydown', (event) => {
             if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
 
             event.preventDefault();
-            const nextButton = elements.rootButtons.find(function (candidate) {
-                return candidate !== button;
-            });
+            const nextButton = elements.rootButtons.find((candidate) => candidate !== button);
             nextButton.click();
             nextButton.focus();
         });
     });
 
-    elements.evaluateButton.addEventListener('click', function () {
+    elements.evaluateButton.addEventListener('click', () => {
         if (!VALID_GENDERS.has(state.rootGender)) return;
 
-        performAction(function () {
+        performAction(() => {
             state.result = evaluate(state.steps, state.rootGender);
         });
     });
@@ -501,7 +482,7 @@
         window.clearTimeout(backPressTimer);
         longPressTriggered = false;
         elements.backButton.classList.add('is-pressing');
-        backPressTimer = window.setTimeout(function () {
+        backPressTimer = window.setTimeout(() => {
             longPressTriggered = true;
             clearAllRelations();
         }, LONG_PRESS_MS);
@@ -513,16 +494,16 @@
         elements.backButton.classList.remove('is-pressing');
     }
 
-    elements.backButton.addEventListener('pointerdown', function (event) {
+    elements.backButton.addEventListener('pointerdown', (event) => {
         if (event.button !== 0) return;
         startBackPress();
     });
 
-    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (eventName) {
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach((eventName) => {
         elements.backButton.addEventListener(eventName, endBackPress);
     });
 
-    elements.backButton.addEventListener('click', function (event) {
+    elements.backButton.addEventListener('click', (event) => {
         if (suppressKeyboardClick && event.detail === 0) return;
 
         if (longPressTriggered) {
@@ -532,7 +513,7 @@
         goBack();
     });
 
-    elements.backButton.addEventListener('keydown', function (event) {
+    elements.backButton.addEventListener('keydown', (event) => {
         if (!['Enter', ' '].includes(event.key)) return;
 
         event.preventDefault();
@@ -542,7 +523,7 @@
         startBackPress();
     });
 
-    elements.backButton.addEventListener('keyup', function (event) {
+    elements.backButton.addEventListener('keyup', (event) => {
         if (!['Enter', ' '].includes(event.key)) return;
 
         event.preventDefault();
@@ -552,7 +533,7 @@
         keyboardPressActive = false;
         endBackPress();
         suppressKeyboardClick = true;
-        window.setTimeout(function () {
+        window.setTimeout(() => {
             suppressKeyboardClick = false;
         }, 0);
 
