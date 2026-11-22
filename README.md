@@ -22,30 +22,39 @@
 
 ```mermaid
 flowchart TD
-    START(["開啟網站"]) --> GENDER{"是否已選擇視角？"}
-
-    GENDER -- "否" --> SELECT["選擇「我（男）」或「我（女）」"]
-    SELECT --> RESET["建立新的空白查詢<br/>清除關係、結果與返回歷史"]
+    START(["開啟網站"]) --> SELECT["必須先選擇「我（男）」或「我（女）」<br/>未選擇時，關係按鈕與等號維持停用"]
+    SELECT --> RESET["設定所選視角<br/>清除關係、結果與返回歷史"]
     RESET --> ENABLE["啟用 12 個關係按鈕與等號"]
     ENABLE --> ACTION{"選擇下一個操作"}
-    GENDER -- "是" --> ACTION
 
     ACTION -- "改選視角" --> SELECT
 
     ACTION -- "按關係按鈕" --> SAVE_REL["把目前狀態存入返回歷史"]
     SAVE_REL --> APPEND["加入一個關係步驟"]
     APPEND --> CLEAR_RESULT["清除上一個計算結果"]
-    CLEAR_RESULT --> RENDER_PATH["更新關係路徑與步數"]
-    RENDER_PATH --> ACTION
+    CLEAR_RESULT --> RENDER_STATE["依目前完整狀態重新渲染<br/>關係路徑、步數與結果區"]
+    RENDER_STATE --> ACTION
 
     ACTION -- "按等號" --> SAVE_EQ["把目前狀態存入返回歷史"]
     SAVE_EQ --> HAS_STEP{"是否至少輸入一個關係？"}
     HAS_STEP -- "否" --> EMPTY_ERROR["顯示「請先輸入至少一個親屬關係」"]
     HAS_STEP -- "是" --> LOAD_GRAPH["依所選視角建立或讀取親屬圖"]
-    LOAD_GRAPH --> FOLLOW["依序走訪每個關係<br/>保留性別、世代、婚姻方向與長幼資訊"]
-    FOLLOW --> FOUND{"是否找到支援的親屬？"}
-    FOUND -- "是" --> SUCCESS["以成功樣式顯示親屬稱謂"]
-    FOUND -- "否" --> UNSUPPORTED["顯示超出作業範圍的提示"]
+    LOAD_GRAPH --> ROOT_NODE["從親屬圖的 root（我）節點開始"]
+    ROOT_NODE --> RELATION_TYPE{"依序讀取下一個關係步驟"}
+
+    RELATION_TYPE -- "爸爸或媽媽" --> PARENT_LINK["沿目前節點的 father 或 mother 連結"]
+    RELATION_TYPE -- "哥哥、弟弟、姊姊或妹妹" --> SIBLING_LINK["在 siblings 排除本人並篩選指定性別<br/>依 birthOrder 尋找最接近的較年長或較年輕手足"]
+    RELATION_TYPE -- "丈夫或妻子" --> SPOUSE_LINK["核對目前節點的性別與配偶方向<br/>符合後沿 spouse 連結取得男配偶或女配偶"]
+    RELATION_TYPE -- "較年長或較年輕的兒子、女兒" --> CHILD_LINK["在 children 篩選指定性別並依 birthOrder 排序<br/>較年長取第一位，較年輕取最後一位"]
+
+    PARENT_LINK --> LINK_FOUND{"是否取得符合條件的下一個節點？"}
+    SIBLING_LINK --> LINK_FOUND
+    SPOUSE_LINK --> LINK_FOUND
+    CHILD_LINK --> LINK_FOUND
+    LINK_FOUND -- "否" --> UNSUPPORTED["顯示「這個組合不在本次作業的親屬範圍內」"]
+    LINK_FOUND -- "是" --> HAS_NEXT{"還有尚未處理的關係步驟？"}
+    HAS_NEXT -- "是" --> RELATION_TYPE
+    HAS_NEXT -- "否" --> SUCCESS["以成功樣式顯示最後節點的親屬稱謂"]
     EMPTY_ERROR --> SHOW_RESULT["更新結果區"]
     SUCCESS --> SHOW_RESULT
     UNSUPPORTED --> SHOW_RESULT
@@ -57,13 +66,13 @@ flowchart TD
     REPEAT_GUARD --> HOLD_TIME
 
     HOLD_TIME -- "否，短按" --> HAS_HISTORY{"返回歷史是否有上一個狀態？"}
-    HAS_HISTORY -- "是" --> RESTORE["恢復上一個狀態"]
-    RESTORE --> RENDER_PATH
-    HAS_HISTORY -- "否" --> NO_HISTORY["顯示「沒有可返回的上一步」"]
+    HAS_HISTORY -- "是" --> RESTORE["取出並還原上一個完整操作狀態<br/>可能還原關係步驟、計算結果或錯誤提示"]
+    RESTORE --> RENDER_STATE
+    HAS_HISTORY -- "否" --> NO_HISTORY["顯示「目前沒有可以返回的步驟」"]
     NO_HISTORY --> SHOW_RESULT
 
     HOLD_TIME -- "是，長按" --> CLEAR_ALL["清除關係路徑、結果與返回歷史<br/>保留已選擇的視角"]
-    CLEAR_ALL --> RENDER_PATH
+    CLEAR_ALL --> RENDER_STATE
 ```
 
 ## 操作範例
