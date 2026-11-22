@@ -208,9 +208,7 @@
                 : candidate.birthOrder > person.birthOrder;
         });
 
-        candidates.sort((a, b) => {
-            return direction === 'older' ? b.birthOrder - a.birthOrder : a.birthOrder - b.birthOrder;
-        });
+        candidates.sort((a, b) => (direction === 'older' ? b.birthOrder - a.birthOrder : a.birthOrder - b.birthOrder));
 
         return candidates[0] || null;
     }
@@ -409,7 +407,8 @@
         if (state.result.ok) {
             elements.result.textContent = state.result.title;
             elements.result.classList.add('is-success');
-        } else {
+        }
+        else {
             elements.result.textContent = state.result.message;
             elements.result.classList.add('is-error');
         }
