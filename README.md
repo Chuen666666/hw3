@@ -2,22 +2,6 @@
 
 親戚關係繞口又難記？「過年親戚聚會好幫手」可以按照關係順序，快速找出正確的中文親屬稱謂，拜年時不再擔心叫錯人。
 
-## 功能特色
-
-- 依照親屬關係逐步輸入，快速取得稱謂。
-- 提供男、女兩種視角，處理不同的親屬稱呼。
-- 支援父母、兄弟姊妹、配偶、子女與長幼關係。
-- 可隨時返回上一步，也能長按返回一次清除整條關係。
-- 支援電腦、平板與手機操作。
-- 不需要註冊，也不會蒐集個人資料。
-
-## 使用方式
-
-1. 先選擇「我（男）」或「我（女）」。
-2. 按照題目的順序，依次選擇親屬關係。
-3. 按下 `=` 查看稱謂答案。
-4. 按錯時短按「返回」撤銷一步；長按「返回」可全部清除。
-
 ## 詳細操作流程
 
 ```mermaid
@@ -131,6 +115,39 @@ if (typeof document === 'undefined') return;
 
 若結果為 `undefined`，`return` 只會提前結束最外層 IIFE，不會進入取得 DOM 元素、註冊事件或渲染畫面的程式。由於 `global.KinshipEngine` 已在這行之前建立，非瀏覽器環境仍可使用 `evaluate()`、`buildExpression()` 與 `relationLabels` 進行測試。
 
+### 結果物件與狀態代碼
+
+`evaluate()` 與 `goBack()` 都使用相同的結果物件結構，讓 `render()` 可以依 `ok` 決定顯示成功或錯誤樣式：
+
+| 欄位 | 出現時機 | 意義 |
+| --- | --- | --- |
+| `ok` | 所有結果 | `true` 表示成功找到稱謂；`false` 表示輸入或操作無法完成。 |
+| `code` | 所有結果 | 供程式判斷結果類型的固定英文代碼。 |
+| `title` | `ok === true` | 成功解析後的中文親屬稱謂。 |
+| `message` | `ok === false` | 顯示給使用者看的中文錯誤或操作提示。 |
+
+`evaluate()` 依序檢查視角、空輸入、關係代碼，最後才走訪親屬圖。因此同時存在多個問題時，會回傳最先遇到的錯誤。
+
+| `code` | 來源 | 觸發參數／狀態 | `ok` | `title`／`message` |
+| --- | --- | --- | --- | --- |
+| `gender-required` | `evaluate()` | `rootGender` 不是 `'male'` 或 `'female'`，例如 `null`、空字串或其他值。 | `false` | `請先選擇「我（男）」或「我（女）」` |
+| `gender-required` | `goBack()` | 尚未選擇視角且 `history` 為空時按返回。 | `false` | `請先選擇「我（男）」或「我（女）」` |
+| `empty` | `evaluate()` | `steps` 不是陣列，或是空陣列 `[]`。 | `false` | `請先輸入至少一個親屬關係` |
+| `invalid-step` | `evaluate()` | `steps` 中至少一個值不是 `RELATION_LABELS` 的鍵，例如 `['unknown']`。 | `false` | `輸入中包含無效的親屬關係` |
+| `out-of-scope` | `evaluate()` | 所有關係代碼都合法，但 `resolvePath()` 在走訪時找不到符合條件的節點，例如男性視角輸入 `['husband']`。 | `false` | `這個組合不在本次作業的親屬範圍內` |
+| `no-history` | `goBack()` | 已選擇合法視角，但 `history` 為空時按返回。 | `false` | `目前沒有可以返回的步驟` |
+| `resolved` | `evaluate()` | 視角、關係代碼及完整路徑都有效。 | `true` | `title` 為最後節點的稱謂，例如 `妻`。 |
+
+例如 `evaluate(['husband'], 'male')` 的兩個參數型態都正確，`husband` 也是合法關係代碼；但男性節點不能沿「丈夫」方向取得配偶，因此會得到：
+
+```javascript
+{
+    ok: false,
+    code: 'out-of-scope',
+    message: '這個組合不在本次作業的親屬範圍內'
+}
+```
+
 ### 親屬圖與計算函式
 
 大部分親屬圖 helper 只存在於 IIFE 內部；真正對外公開的只有表中標示為 `KinshipEngine 公開` 的函式：
@@ -190,11 +207,3 @@ if (typeof document === 'undefined') return;
 | `longPressTriggered` | 表示長按是否已完成全清，用來抑制後續 click 造成額外返回。 |
 | `keyboardPressActive` | 表示 Enter／Space 是否正處於按住狀態，避免重複 keydown 重啟計時。 |
 | `suppressKeyboardClick` | 暫時忽略鍵盤操作後瀏覽器產生的 `detail = 0` 合成 click。 |
-
-## 操作範例
-
-選擇「我（男）」後，依序按下「媽媽」、「爸爸」、「女兒（較年輕）」及 `=`，答案會顯示為「姨媽」。
-
-## 使用提醒
-
-本工具依課程作業指定的親屬範圍提供答案，不包含曾祖父母以上的關係或其他特殊稱謂。
