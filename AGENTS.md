@@ -23,7 +23,7 @@ hw3/
 - Keep all CSS and the favicon inside the HTML file.
 - Do not add a framework, package manager, backend, external asset, or CDN without explicit approval.
 - Keep README.md human-facing; implementation and deployment notes belong here.
-- Keep README.md's Mermaid flowchart synchronized with user-visible interaction behavior.
+- Keep README.md's Mermaid flowchart focused on and synchronized with the kinship calculation logic.
 
 ## Interface and content
 
