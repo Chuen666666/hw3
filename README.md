@@ -160,11 +160,11 @@ flowchart TD
 flowchart TD
     START(["開始：render()"]) --> FLAGS["hasRoot ← VALID_GENDERS.has(state.rootGender)<br/>hasInput ← state.steps.length > 0"]
     FLAGS --> BOTH{"hasRoot 且 hasInput？"}
-    BOTH -- "是" --> EXPRESSION_FULL[["buildExpression(state.steps, state.rootGender)"]]
+    BOTH -- "是" --> EXPRESSION_FULL[["elements.expression.textContent ←<br/>buildExpression(state.steps, state.rootGender)"]]
     BOTH -- "否" --> ROOT_ONLY{"hasRoot？"}
-    ROOT_ONLY -- "是" --> EXPRESSION_ROOT[["buildExpression([], state.rootGender)"]]
-    ROOT_ONLY -- "否" --> EXPRESSION_EMPTY["expressionText ← 請先選擇視角"]
-    EXPRESSION_FULL --> OUTPUT_MAIN[/"更新 expression、stepCount、viewpointStatus<br/>與 rootRequiredMessage"/]
+    ROOT_ONLY -- "是" --> EXPRESSION_ROOT[["elements.expression.textContent ←<br/>buildExpression([], state.rootGender)"]]
+    ROOT_ONLY -- "否" --> EXPRESSION_EMPTY[/"elements.expression.textContent ←<br/>請先選擇「我（男）」或「我（女）」"/]
+    EXPRESSION_FULL --> OUTPUT_MAIN[/"更新 stepCount、viewpointStatus<br/>與 rootRequiredMessage"/]
     EXPRESSION_ROOT --> OUTPUT_MAIN
     EXPRESSION_EMPTY --> OUTPUT_MAIN
     OUTPUT_MAIN --> OUTPUT_BUTTONS[/"更新 rootButtons 的 aria-checked<br/>以及 relationButtons、evaluateButton 的 disabled"/]
@@ -290,18 +290,10 @@ flowchart TD
     CHILDREN --> ROOT_GENDER{"rootGender === 'male'？"}
     ROOT_GENDER -- "是" --> FAMILY_MALE[["family(root, spouse, children)"]]
     ROOT_GENDER -- "否" --> FAMILY_FEMALE[["family(spouse, root, children)"]]
-    FAMILY_MALE --> SON_INDEX["sonIndex ← 0"]
-    FAMILY_FEMALE --> SON_INDEX
-    SON_INDEX --> SON_LOOP{"還有 son？"}
-    SON_LOOP -- "是" --> SON_FAMILY[["以 person() 建立 wife、grandson、granddaughter<br/>再以 family() 組成家庭"]]
-    SON_FAMILY --> SON_NEXT["sonIndex ← sonIndex + 1"]
-    SON_NEXT --> SON_LOOP
-    SON_LOOP -- "否" --> DAUGHTER_INDEX["daughterIndex ← 0"]
-    DAUGHTER_INDEX --> DAUGHTER_LOOP{"還有 daughter？"}
-    DAUGHTER_LOOP -- "是" --> DAUGHTER_FAMILY[["以 person() 建立 husband、externalGrandson、externalGranddaughter<br/>再以 family() 組成家庭"]]
-    DAUGHTER_FAMILY --> DAUGHTER_NEXT["daughterIndex ← daughterIndex + 1"]
-    DAUGHTER_NEXT --> DAUGHTER_LOOP
-    DAUGHTER_LOOP -- "否" --> RETURN(["返回 {root, people}"])
+    FAMILY_MALE --> SONS[["[olderSon, youngerSon].forEach((son, index) => ...)<br/>每次以 person() 建立 wife、grandson、granddaughter<br/>再以 family() 組成家庭"]]
+    FAMILY_FEMALE --> SONS
+    SONS --> DAUGHTERS[["[olderDaughter, youngerDaughter].forEach((daughter, index) => ...)<br/>每次以 person() 建立 husband、externalGrandson、externalGranddaughter<br/>再以 family() 組成家庭"]]
+    DAUGHTERS --> RETURN(["返回 {root, people}"])
 ```
 
 圖 21：`buildGraph(rootGender)` 子流程
@@ -354,14 +346,13 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：resolvePath(graph, steps)"]) --> CURRENT["current ← graph.root<br/>index ← 0"]
-    CURRENT --> LOOP{"index < steps.length？"}
+    START(["開始：resolvePath(graph, steps)"]) --> CURRENT["current ← graph.root"]
+    CURRENT --> LOOP{"for (const relation of steps)<br/>還有下一個 relation？"}
     LOOP -- "否" --> RETURN_CURRENT(["返回 current"])
-    LOOP -- "是" --> FOLLOW[["current ← follow(current, steps[index])"]]
+    LOOP -- "是" --> FOLLOW[["current ← follow(current, relation)"]]
     FOLLOW --> FOUND{"current 存在？"}
     FOUND -- "否" --> RETURN_NULL(["返回 null"])
-    FOUND -- "是" --> NEXT["index ← index + 1"]
-    NEXT --> LOOP
+    FOUND -- "是" --> LOOP
 ```
 
 圖 26：`resolvePath(graph, steps)` 子流程
