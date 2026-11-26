@@ -8,10 +8,10 @@
 
 ```mermaid
 flowchart TD
-    START(["開始：relationButtons 的 click 事件"]) --> READ[/"讀取 state.rootGender"/]
-    READ --> VALID{"VALID_GENDERS.has(state.rootGender)？"}
+    START(["開始：relationButtons 的 click 事件"]) --> READ[/"讀取 state.rootGender<br/>（取得目前的性別視角）"/]
+    READ --> VALID{"VALID_GENDERS.has(state.rootGender)？<br/>（是否為合法性別）"}
     VALID -- "否" --> END(["結束"])
-    VALID -- "是" --> ACTION[["performAction(change)<br/>change：state.steps.push(button.dataset.relation)<br/>state.result ← null"]]
+    VALID -- "是" --> ACTION[["performAction(change)<br/>（保存舊狀態、執行變更並重繪）<br/>change：state.steps.push(button.dataset.relation)<br/>state.result ← null（清除舊結果）"]]
     ACTION --> END
 ```
 
@@ -19,9 +19,9 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：rootButtons 的 click 事件"]) --> READ[/"讀取 button.dataset.root"/]
-    READ --> SET["state.rootGender ← button.dataset.root<br/>state.steps ← []<br/>state.result ← null<br/>history.length ← 0"]
-    SET --> RENDER[["render()"]]
+    START(["開始：rootButtons 的 click 事件"]) --> READ[/"讀取 button.dataset.root<br/>（取得被點選的性別）"/]
+    READ --> SET["state.rootGender ← button.dataset.root<br/>state.steps ← []、state.result ← null<br/>history.length ← 0<br/>（設定視角並清空關係、結果與歷史）"]
+    SET --> RENDER[["render()<br/>（依最新狀態更新畫面）"]]
     RENDER --> END(["結束"])
 ```
 
@@ -32,9 +32,9 @@ flowchart TD
     START(["開始：rootButtons 的 keydown 事件"]) --> READ[/"讀取 event.key"/]
     READ --> ARROW{"event.key 是方向鍵？"}
     ARROW -- "否" --> END(["結束"])
-    ARROW -- "是" --> PREVENT["event.preventDefault()"]
-    PREVENT --> FIND["nextButton ← elements.rootButtons 中不是目前 button 的按鈕"]
-    FIND --> OUTPUT[/"nextButton.click()<br/>nextButton.focus()"/]
+    ARROW -- "是" --> PREVENT["event.preventDefault()<br/>（阻止方向鍵的預設捲動）"]
+    PREVENT --> FIND["nextButton ← elements.rootButtons 中不是目前 button 的按鈕<br/>（找出另一個性別按鈕）"]
+    FIND --> OUTPUT[/"nextButton.click()、nextButton.focus()<br/>（切換選項並移動焦點）"/]
     OUTPUT --> END
 ```
 
@@ -42,10 +42,10 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：evaluateButton 的 click 事件"]) --> READ[/"讀取 state.rootGender"/]
-    READ --> VALID{"VALID_GENDERS.has(state.rootGender)？"}
+    START(["開始：evaluateButton 的 click 事件"]) --> READ[/"讀取 state.rootGender<br/>（取得目前的性別視角）"/]
+    READ --> VALID{"VALID_GENDERS.has(state.rootGender)？<br/>（是否為合法性別）"}
     VALID -- "否" --> END(["結束"])
-    VALID -- "是" --> ACTION[["performAction(change)（見圖 11）<br/>change：state.result ← evaluate(state.steps, state.rootGender)"]]
+    VALID -- "是" --> ACTION[["performAction(change)（見圖 11）<br/>（保存舊狀態後計算並重繪）<br/>change：state.result ← evaluate(state.steps, state.rootGender)"]]
     ACTION --> END
 ```
 
@@ -53,10 +53,10 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：backButton 的 pointerdown 事件"]) --> READ[/"讀取 event.button"/]
-    READ --> PRIMARY{"event.button === 0？"}
+    START(["開始：backButton 的 pointerdown 事件"]) --> READ[/"讀取 event.button<br/>（取得指標按鍵代碼）"/]
+    READ --> PRIMARY{"event.button === 0？<br/>（是否為主要按鍵）"}
     PRIMARY -- "否" --> END(["結束"])
-    PRIMARY -- "是" --> PRESS[["startBackPress()"]]
+    PRIMARY -- "是" --> PRESS[["startBackPress()<br/>（啟動長按計時）"]]
     PRESS --> END
 ```
 
@@ -64,13 +64,13 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：backButton 的 click 事件"]) --> READ[/"讀取 suppressKeyboardClick、event.detail<br/>與 longPressTriggered"/]
-    READ --> SYNTHETIC{"suppressKeyboardClick<br/>且 event.detail === 0？"}
+    START(["開始：backButton 的 click 事件"]) --> READ[/"讀取 suppressKeyboardClick、event.detail<br/>與 longPressTriggered<br/>（判斷點擊來源及長按狀態）"/]
+    READ --> SYNTHETIC{"suppressKeyboardClick 且 event.detail === 0？<br/>（是否為需忽略的鍵盤合成 click）"}
     SYNTHETIC -- "是" --> END(["結束"])
-    SYNTHETIC -- "否" --> LONG{"longPressTriggered？"}
-    LONG -- "是" --> RESET["longPressTriggered ← false"]
+    SYNTHETIC -- "否" --> LONG{"longPressTriggered？<br/>（長按是否已完成）"}
+    LONG -- "是" --> RESET["longPressTriggered ← false<br/>（消耗長按後產生的 click）"]
     RESET --> END
-    LONG -- "否" --> BACK[["goBack()"]]
+    LONG -- "否" --> BACK[["goBack()<br/>（還原上一個狀態）"]]
     BACK --> END
 ```
 
@@ -81,11 +81,11 @@ flowchart TD
     START(["開始：backButton 的 keydown 事件"]) --> READ[/"讀取 event.key、event.repeat<br/>與 keyboardPressActive"/]
     READ --> SUPPORTED{"event.key 是 Enter 或 Space？"}
     SUPPORTED -- "否" --> END(["結束"])
-    SUPPORTED -- "是" --> PREVENT["event.preventDefault()"]
-    PREVENT --> REPEAT{"event.repeat<br/>或 keyboardPressActive？"}
+    SUPPORTED -- "是" --> PREVENT["event.preventDefault()<br/>（阻止按鍵預設 click）"]
+    PREVENT --> REPEAT{"event.repeat 或 keyboardPressActive？<br/>（是否為重複按鍵或已在計時）"}
     REPEAT -- "是" --> END
-    REPEAT -- "否" --> ACTIVE["keyboardPressActive ← true"]
-    ACTIVE --> PRESS[["startBackPress()"]]
+    REPEAT -- "否" --> ACTIVE["keyboardPressActive ← true<br/>（標記鍵盤仍按住）"]
+    ACTIVE --> PRESS[["startBackPress()<br/>（啟動長按計時）"]]
     PRESS --> END
 ```
 
@@ -96,16 +96,16 @@ flowchart TD
     START(["開始：backButton 的 keyup 事件"]) --> READ[/"讀取 event.key、keyboardPressActive<br/>與 longPressTriggered"/]
     READ --> SUPPORTED{"event.key 是 Enter 或 Space？"}
     SUPPORTED -- "否" --> END(["結束"])
-    SUPPORTED -- "是" --> PREVENT["event.preventDefault()"]
-    PREVENT --> ACTIVE{"keyboardPressActive？"}
+    SUPPORTED -- "是" --> PREVENT["event.preventDefault()<br/>（阻止按鍵預設 click）"]
+    PREVENT --> ACTIVE{"keyboardPressActive？<br/>（是否曾啟動鍵盤按壓）"}
     ACTIVE -- "否" --> END
-    ACTIVE -- "是" --> SAVE["wasLongPress ← longPressTriggered<br/>keyboardPressActive ← false"]
-    SAVE --> RELEASE[["endBackPress()"]]
-    RELEASE --> SUPPRESS["suppressKeyboardClick ← true<br/>設定 0ms 計時器稍後重設為 false"]
-    SUPPRESS --> LONG{"wasLongPress？"}
-    LONG -- "是" --> RESET["longPressTriggered ← false"]
+    ACTIVE -- "是" --> SAVE["wasLongPress ← longPressTriggered<br/>keyboardPressActive ← false<br/>（保存長按結果並結束按住狀態）"]
+    SAVE --> RELEASE[["endBackPress()<br/>（停止計時並移除按壓樣式）"]]
+    RELEASE --> SUPPRESS["suppressKeyboardClick ← true<br/>設定 0ms 計時器稍後重設為 false<br/>（暫時忽略瀏覽器合成 click）"]
+    SUPPRESS --> LONG{"wasLongPress？<br/>（這次是否已執行全清）"}
+    LONG -- "是" --> RESET["longPressTriggered ← false<br/>（重設長按旗標）"]
     RESET --> END
-    LONG -- "否" --> BACK[["goBack()"]]
+    LONG -- "否" --> BACK[["goBack()<br/>（短按時還原上一個狀態）"]]
     BACK --> END
 ```
 
@@ -113,8 +113,8 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：LONG_PRESS_MS 計時器到期"]) --> FLAG["longPressTriggered ← true"]
-    FLAG --> CLEAR[["clearAllRelations()"]]
+    START(["開始：LONG_PRESS_MS 計時器到期"]) --> FLAG["longPressTriggered ← true<br/>（標記已觸發長按）"]
+    FLAG --> CLEAR[["clearAllRelations()<br/>（清除全部關係、結果與歷史）"]]
     CLEAR --> END(["結束"])
 ```
 
@@ -122,7 +122,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：0ms 計時器到期"]) --> RESET["suppressKeyboardClick ← false"]
+    START(["開始：0ms 計時器到期"]) --> RESET["suppressKeyboardClick ← false<br/>（允許後續正常 click）"]
     RESET --> END(["結束"])
 ```
 
@@ -132,13 +132,13 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：performAction(change)"]) --> CLONE[["cloneState()"]]
-    CLONE --> PUSH["history.push(cloneState() 的結果)"]
-    PUSH --> LIMIT{"history.length > 100？"}
-    LIMIT -- "是" --> SHIFT["history.shift()"]
-    LIMIT -- "否" --> CHANGE["執行傳入的 change callback"]
+    START(["開始：performAction(change)"]) --> CLONE[["cloneState()<br/>（複製操作前狀態）"]]
+    CLONE --> PUSH["history.push(cloneState() 的結果)<br/>（加入返回歷史）"]
+    PUSH --> LIMIT{"history.length > 100？<br/>（是否超過歷史上限）"}
+    LIMIT -- "是" --> SHIFT["history.shift()<br/>（移除最舊紀錄）"]
+    LIMIT -- "否" --> CHANGE["執行傳入的 change callback<br/>（套用本次操作）"]
     SHIFT --> CHANGE
-    CHANGE --> RENDER[["render()"]]
+    CHANGE --> RENDER[["render()<br/>（依新狀態更新畫面）"]]
     RENDER --> RETURN(["返回"])
 ```
 
@@ -146,10 +146,10 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：cloneState()"]) --> COPY["回傳物件的 rootGender ← state.rootGender<br/>steps ← state.steps.slice()"]
-    COPY --> HAS_RESULT{"state.result 存在？"}
-    HAS_RESULT -- "是" --> COPY_RESULT["result ← Object.assign({}, state.result)"]
-    HAS_RESULT -- "否" --> NULL_RESULT["result ← null"]
+    START(["開始：cloneState()"]) --> COPY["回傳物件的 rootGender ← state.rootGender<br/>steps ← state.steps.slice()<br/>（複製視角與關係陣列）"]
+    COPY --> HAS_RESULT{"state.result 存在？<br/>（是否有結果需要複製）"}
+    HAS_RESULT -- "是" --> COPY_RESULT["result ← Object.assign({}, state.result)<br/>（建立獨立的結果物件）"]
+    HAS_RESULT -- "否" --> NULL_RESULT["result ← null<br/>（維持沒有結果）"]
     COPY_RESULT --> RETURN(["返回 {rootGender, steps, result}"])
     NULL_RESULT --> RETURN
 ```
@@ -158,21 +158,21 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：render()"]) --> FLAGS["hasRoot ← VALID_GENDERS.has(state.rootGender)<br/>hasInput ← state.steps.length > 0"]
-    FLAGS --> BOTH{"hasRoot 且 hasInput？"}
-    BOTH -- "是" --> EXPRESSION_FULL[["elements.expression.textContent ←<br/>buildExpression(state.steps, state.rootGender)"]]
-    BOTH -- "否" --> ROOT_ONLY{"hasRoot？"}
-    ROOT_ONLY -- "是" --> EXPRESSION_ROOT[["elements.expression.textContent ←<br/>buildExpression([], state.rootGender)"]]
+    START(["開始：render()"]) --> FLAGS["hasRoot ← VALID_GENDERS.has(state.rootGender)<br/>hasInput ← state.steps.length > 0<br/>（判斷是否已有視角及關係輸入）"]
+    FLAGS --> BOTH{"hasRoot 且 hasInput？<br/>（是否顯示完整關係路徑）"}
+    BOTH -- "是" --> EXPRESSION_FULL[["elements.expression.textContent ←<br/>buildExpression(state.steps, state.rootGender)<br/>（組合完整路徑文字）"]]
+    BOTH -- "否" --> ROOT_ONLY{"hasRoot？<br/>（是否僅顯示視角）"}
+    ROOT_ONLY -- "是" --> EXPRESSION_ROOT[["elements.expression.textContent ←<br/>buildExpression([], state.rootGender)<br/>（只組合視角文字）"]]
     ROOT_ONLY -- "否" --> EXPRESSION_EMPTY[/"elements.expression.textContent ←<br/>請先選擇「我（男）」或「我（女）」"/]
     EXPRESSION_FULL --> OUTPUT_MAIN[/"更新 stepCount、viewpointStatus<br/>與 rootRequiredMessage"/]
     EXPRESSION_ROOT --> OUTPUT_MAIN
     EXPRESSION_EMPTY --> OUTPUT_MAIN
     OUTPUT_MAIN --> OUTPUT_BUTTONS[/"更新 rootButtons 的 aria-checked<br/>以及 relationButtons、evaluateButton 的 disabled"/]
     OUTPUT_BUTTONS --> RESET_CLASS[/"移除 result 的 is-idle、is-success、is-error"/]
-    RESET_CLASS --> HAS_RESULT{"state.result 存在？"}
+    RESET_CLASS --> HAS_RESULT{"state.result 存在？<br/>（是否有計算結果）"}
     HAS_RESULT -- "否" --> IDLE[/"依 hasRoot 顯示等待輸入或尚未選擇視角<br/>並加入 is-idle"/]
     IDLE --> RETURN(["返回"])
-    HAS_RESULT -- "是" --> OK{"state.result.ok？"}
+    HAS_RESULT -- "是" --> OK{"state.result.ok？<br/>（計算是否成功）"}
     OK -- "是" --> SUCCESS[/"顯示 state.result.title<br/>並加入 is-success"/]
     OK -- "否" --> ERROR[/"顯示 state.result.message<br/>並加入 is-error"/]
     SUCCESS --> RETURN
@@ -183,14 +183,14 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：goBack()"]) --> HISTORY{"history.length > 0？"}
-    HISTORY -- "是" --> RESTORE["state ← history.pop()"]
-    RESTORE --> RENDER_OK[["render()"]]
+    START(["開始：goBack()"]) --> HISTORY{"history.length > 0？<br/>（是否有上一個狀態）"}
+    HISTORY -- "是" --> RESTORE["state ← history.pop()<br/>（取出最近保存的狀態）"]
+    RESTORE --> RENDER_OK[["render()<br/>（顯示還原後狀態）"]]
     RENDER_OK --> RETURN(["返回"])
-    HISTORY -- "否" --> GENDER{"VALID_GENDERS.has(state.rootGender)？"}
+    HISTORY -- "否" --> GENDER{"VALID_GENDERS.has(state.rootGender)？<br/>（沒有歷史時是否已選視角）"}
     GENDER -- "是" --> NO_HISTORY["state.result ← no-history 結果<br/>message：目前沒有可以返回的步驟"]
     GENDER -- "否" --> NO_GENDER["state.result ← gender-required 結果<br/>message：請先選擇性別視角"]
-    NO_HISTORY --> RENDER_ERROR[["render()"]]
+    NO_HISTORY --> RENDER_ERROR[["render()<br/>（顯示無法返回的提示）"]]
     NO_GENDER --> RENDER_ERROR
     RENDER_ERROR --> RETURN
 ```
@@ -199,8 +199,8 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：clearAllRelations()"]) --> CLEAR["state.steps ← []<br/>state.result ← null<br/>history.length ← 0"]
-    CLEAR --> RENDER[["render()"]]
+    START(["開始：clearAllRelations()"]) --> CLEAR["state.steps ← []<br/>state.result ← null<br/>history.length ← 0<br/>（清除關係、結果與歷史）"]
+    CLEAR --> RENDER[["render()<br/>（顯示清除後狀態）"]]
     RENDER --> STATUS[/"elements.interactionStatus.textContent<br/>← 已清除所有親屬關係"/]
     STATUS --> RETURN(["返回"])
 ```
@@ -209,10 +209,10 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：startBackPress()"]) --> CLEAR_TIMER["window.clearTimeout(backPressTimer)"]
-    CLEAR_TIMER --> RESET["longPressTriggered ← false"]
+    START(["開始：startBackPress()"]) --> CLEAR_TIMER["window.clearTimeout(backPressTimer)<br/>（取消先前計時器）"]
+    CLEAR_TIMER --> RESET["longPressTriggered ← false<br/>（重設長按狀態）"]
     RESET --> STYLE[/"backButton 加入 is-pressing"/]
-    STYLE --> TIMER["backPressTimer ← window.setTimeout(callback, LONG_PRESS_MS)"]
+    STYLE --> TIMER["backPressTimer ← window.setTimeout(callback, LONG_PRESS_MS)<br/>（排程 700ms 後執行全清）"]
     TIMER --> RETURN(["返回"])
 ```
 
@@ -220,8 +220,8 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：endBackPress()"]) --> CLEAR_TIMER["window.clearTimeout(backPressTimer)"]
-    CLEAR_TIMER --> RESET["backPressTimer ← null"]
+    START(["開始：endBackPress()"]) --> CLEAR_TIMER["window.clearTimeout(backPressTimer)<br/>（停止長按計時）"]
+    CLEAR_TIMER --> RESET["backPressTimer ← null<br/>（清除計時器識別值）"]
     RESET --> STYLE[/"backButton 移除 is-pressing"/]
     STYLE --> RETURN(["返回"])
 ```
@@ -232,8 +232,8 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：buildExpression(steps, rootGender)"]) --> ROOT["rootLabel ← rootGender === 'male'<br/>？我（男）：我（女）"]
-    ROOT --> EMPTY{"steps.length === 0？"}
+    START(["開始：buildExpression(steps, rootGender)"]) --> ROOT["rootLabel ← rootGender === 'male'<br/>？我（男）：我（女）<br/>（依視角決定開頭文字）"]
+    ROOT --> EMPTY{"steps.length === 0？<br/>（是否沒有關係步驟）"}
     EMPTY -- "是" --> RETURN_ROOT(["返回 rootLabel"])
     EMPTY -- "否" --> JOIN["將 steps 透過 RELATION_LABELS 轉成中文<br/>並以『的』連接"]
     JOIN --> RETURN_FULL(["返回 rootLabel + 完整關係文字"])
@@ -243,26 +243,26 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：evaluate(steps, rootGender)"]) --> INPUT[/"讀取 steps、rootGender"/]
-    INPUT --> GENDER{"VALID_GENDERS.has(rootGender)？"}
-    GENDER -- "否" --> GENDER_ERROR(["返回 gender-required 錯誤物件"])
-    GENDER -- "是" --> NONEMPTY{"Array.isArray(steps)<br/>且 steps.length > 0？"}
-    NONEMPTY -- "否" --> EMPTY_ERROR(["返回 empty 錯誤物件"])
-    NONEMPTY -- "是" --> VALID{"每個 step 都是 RELATION_LABELS 的鍵？"}
-    VALID -- "否" --> INVALID_ERROR(["返回 invalid-step 錯誤物件"])
-    VALID -- "是" --> RESOLVE[["match ← resolvePath(getGraph(rootGender), steps)"]]
-    RESOLVE --> MATCH{"match 存在？"}
-    MATCH -- "否" --> SCOPE_ERROR(["返回 out-of-scope 錯誤物件"])
-    MATCH -- "是" --> SUCCESS(["返回 {ok: true, code: 'resolved',<br/>title: match.title}"])
+    START(["開始：evaluate(steps, rootGender)"]) --> INPUT[/"讀取 steps、rootGender<br/>（取得關係步驟與性別視角）"/]
+    INPUT --> GENDER{"VALID_GENDERS.has(rootGender)？<br/>（視角是否合法）"}
+    GENDER -- "否" --> GENDER_ERROR(["返回 gender-required 錯誤物件<br/>（缺少合法視角）"])
+    GENDER -- "是" --> NONEMPTY{"Array.isArray(steps) 且 steps.length > 0？<br/>（是否有至少一個關係步驟）"}
+    NONEMPTY -- "否" --> EMPTY_ERROR(["返回 empty 錯誤物件<br/>（沒有關係輸入）"])
+    NONEMPTY -- "是" --> VALID{"每個 step 都是 RELATION_LABELS 的鍵？<br/>（是否全為支援的關係代碼）"}
+    VALID -- "否" --> INVALID_ERROR(["返回 invalid-step 錯誤物件<br/>（包含無效關係代碼）"])
+    VALID -- "是" --> RESOLVE[["match ← resolvePath(getGraph(rootGender), steps)<br/>（取得親屬圖並走訪完整路徑）"]]
+    RESOLVE --> MATCH{"match 存在？<br/>（是否找到符合條件的人物）"}
+    MATCH -- "否" --> SCOPE_ERROR(["返回 out-of-scope 錯誤物件<br/>（關係組合超出建圖範圍）"])
+    MATCH -- "是" --> SUCCESS(["返回 {ok: true, code: 'resolved',<br/>title: match.title}<br/>（回傳找到的親屬稱謂）"])
 ```
 
 圖 19：`evaluate(steps, rootGender)` 子流程
 
 ```mermaid
 flowchart TD
-    START(["開始：getGraph(gender)"]) --> CACHE{"graphCache.has(gender)？"}
-    CACHE -- "否" --> SAVE[["graphCache.set(gender, buildGraph(gender))"]]
-    CACHE -- "是" --> RETURN(["返回 graphCache.get(gender)"])
+    START(["開始：getGraph(gender)"]) --> CACHE{"graphCache.has(gender)？<br/>（是否已有此性別的親屬圖）"}
+    CACHE -- "否" --> SAVE[["graphCache.set(gender, buildGraph(gender))<br/>（建立並快取親屬圖）"]]
+    CACHE -- "是" --> RETURN(["返回 graphCache.get(gender)<br/>（重用快取的親屬圖）"])
     SAVE --> RETURN
 ```
 
@@ -270,18 +270,18 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：buildGraph(rootGender)"]) --> VALID{"VALID_GENDERS.has(rootGender)？"}
-    VALID -- "否" --> THROW(["拋出 TypeError 並結束"])
-    VALID -- "是" --> MAP["people ← new Map()"]
+    START(["開始：buildGraph(rootGender)"]) --> VALID{"VALID_GENDERS.has(rootGender)？<br/>（視角是否合法）"}
+    VALID -- "否" --> THROW(["拋出 TypeError 並結束<br/>（拒絕非法視角）"])
+    VALID -- "是" --> MAP["people ← new Map()<br/>（建立人物索引）"]
     MAP --> ROOT_FAMILY[["以 person() 建立 root、父母與四名手足<br/>再以 family() 建立核心家庭"]]
     ROOT_FAMILY --> SIBLING_FAMILY[["建立四名手足的配偶<br/>並以 addNiblings() 建立姪甥輩"]]
     SIBLING_FAMILY --> PATERNAL[["建立父系祖父母、叔伯姑與配偶<br/>並以 addFourCousins() 建立堂表親"]]
     PATERNAL --> MATERNAL[["建立母系外祖父母、舅姨與配偶<br/>並以 addFourCousins() 建立表親"]]
     MATERNAL --> SPOUSE_FAMILY[["依 rootGender 建立配偶及其父母手足<br/>並以 addNiblings() 建立配偶方甥輩"]]
     SPOUSE_FAMILY --> CHILDREN[["以 person() 建立兩子兩女"]]
-    CHILDREN --> ROOT_GENDER{"rootGender === 'male'？"}
-    ROOT_GENDER -- "是" --> FAMILY_MALE[["family(root, spouse, children)"]]
-    ROOT_GENDER -- "否" --> FAMILY_FEMALE[["family(spouse, root, children)"]]
+    CHILDREN --> ROOT_GENDER{"rootGender === 'male'？<br/>（決定父母參數順序）"}
+    ROOT_GENDER -- "是" --> FAMILY_MALE[["family(root, spouse, children)<br/>（root 作為父親）"]]
+    ROOT_GENDER -- "否" --> FAMILY_FEMALE[["family(spouse, root, children)<br/>（root 作為母親）"]]
     FAMILY_MALE --> SONS[["[olderSon, youngerSon].forEach((son, index) => ...)<br/>每次以 person() 建立 wife、grandson、granddaughter<br/>再以 family() 組成家庭"]]
     FAMILY_FEMALE --> SONS
     SONS --> DAUGHTERS[["[olderDaughter, youngerDaughter].forEach((daughter, index) => ...)<br/>每次以 person() 建立 husband、externalGrandson、externalGranddaughter<br/>再以 family() 組成家庭"]]
@@ -292,17 +292,17 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：person(id, gender, title)"]) --> NODE["node ← {id, gender, title,<br/>father: null, mother: null, spouse: null,<br/>children: [], siblings: [], birthOrder: null}"]
-    NODE --> SAVE["people.set(id, node)"]
-    SAVE --> RETURN(["返回 node"])
+    START(["開始：person(id, gender, title)"]) --> NODE["node ← {id, gender, title,<br/>father: null, mother: null, spouse: null,<br/>children: [], siblings: [], birthOrder: null}<br/>（建立人物並初始化所有連結）"]
+    NODE --> SAVE["people.set(id, node)<br/>（以 id 保存人物節點）"]
+    SAVE --> RETURN(["返回 node<br/>（交回新人物）"])
 ```
 
 圖 22：`person(id, gender, title)` 子流程
 
 ```mermaid
 flowchart TD
-    START(["開始：family(father, mother, children)"]) --> COUPLE["father.spouse ← mother<br/>mother.spouse ← father<br/>father.children、mother.children ← children"]
-    COUPLE --> CHILDREN["children.forEach((child, index) => {...})<br/>child.father ← father<br/>child.mother ← mother<br/>child.siblings ← children<br/>child.birthOrder ← index"]
+    START(["開始：family(father, mother, children)"]) --> COUPLE["father.spouse ← mother、mother.spouse ← father<br/>father.children、mother.children ← children<br/>（連接夫妻並共用子女清單）"]
+    COUPLE --> CHILDREN["children.forEach((child, index) => {...})<br/>child.father ← father、child.mother ← mother<br/>child.siblings ← children、child.birthOrder ← index<br/>（逐一設定父母、手足與出生順序）"]
     CHILDREN --> RETURN(["返回"])
 ```
 
@@ -311,9 +311,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     START(["開始：addFourCousins(prefix, adult, spouse, familyType)"]) --> PEOPLE[["呼叫 person() 建立 older-son、older-daughter、<br/>younger-son、younger-daughter"]]
-    PEOPLE --> GENDER{"adult.gender === 'male'？"}
-    GENDER -- "是" --> MALE[["family(adult, spouse, children)"]]
-    GENDER -- "否" --> FEMALE[["family(spouse, adult, children)"]]
+    PEOPLE --> GENDER{"adult.gender === 'male'？<br/>（決定父母參數順序）"}
+    GENDER -- "是" --> MALE[["family(adult, spouse, children)<br/>（adult 作為父親）"]]
+    GENDER -- "否" --> FEMALE[["family(spouse, adult, children)<br/>（adult 作為母親）"]]
     MALE --> RETURN(["返回"])
     FEMALE --> RETURN
 ```
@@ -323,9 +323,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     START(["開始：addNiblings(prefix, adult, spouse, maleTitle, femaleTitle)"]) --> PEOPLE[["呼叫 person() 建立 son 與 daughter"]]
-    PEOPLE --> GENDER{"adult.gender === 'male'？"}
-    GENDER -- "是" --> MALE[["family(adult, spouse, children)"]]
-    GENDER -- "否" --> FEMALE[["family(spouse, adult, children)"]]
+    PEOPLE --> GENDER{"adult.gender === 'male'？<br/>（決定父母參數順序）"}
+    GENDER -- "是" --> MALE[["family(adult, spouse, children)<br/>（adult 作為父親）"]]
+    GENDER -- "否" --> FEMALE[["family(spouse, adult, children)<br/>（adult 作為母親）"]]
     MALE --> RETURN(["返回"])
     FEMALE --> RETURN
 ```
@@ -334,11 +334,11 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：resolvePath(graph, steps)"]) --> CURRENT["current ← graph.root"]
-    CURRENT --> LOOP{"for (const relation of steps)<br/>還有下一個 relation？"}
+    START(["開始：resolvePath(graph, steps)"]) --> CURRENT["current ← graph.root<br/>（從『我』開始走訪）"]
+    CURRENT --> LOOP{"for (const relation of steps)<br/>還有下一個 relation？<br/>（依輸入順序取出關係）"}
     LOOP -- "否" --> RETURN_CURRENT(["返回 current"])
-    LOOP -- "是" --> FOLLOW[["current ← follow(current, relation)"]]
-    FOLLOW --> FOUND{"current 存在？"}
+    LOOP -- "是" --> FOLLOW[["current ← follow(current, relation)<br/>（沿單一步驟移動到下一人）"]]
+    FOLLOW --> FOUND{"current 存在？<br/>（是否成功找到下一人）"}
     FOUND -- "否" --> RETURN_NULL(["返回 null"])
     FOUND -- "是" --> LOOP
 ```
@@ -347,33 +347,33 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：follow(person, relation)"]) --> TYPE{"relation 類型？"}
-    TYPE -- "father／mother" --> PARENT{"relation === 'father'？"}
+    START(["開始：follow(person, relation)"]) --> TYPE{"relation 類型？<br/>（選擇單一步驟的連結方式）"}
+    TYPE -- "father／mother" --> PARENT{"relation === 'father'？<br/>（選擇父親或母親）"}
     PARENT -- "是" --> FATHER(["返回 person.father"])
     PARENT -- "否" --> MOTHER(["返回 person.mother"])
 
-    TYPE -- "husband／wife" --> SPOUSE_KIND{"relation === 'husband'？"}
-    SPOUSE_KIND -- "是" --> HUSBAND_OK{"person 是女性，且 spouse 是男性？"}
+    TYPE -- "husband／wife" --> SPOUSE_KIND{"relation === 'husband'？<br/>（選擇丈夫或妻子）"}
+    SPOUSE_KIND -- "是" --> HUSBAND_OK{"person 是女性，且 spouse 是男性？<br/>（丈夫方向是否成立）"}
     HUSBAND_OK -- "是" --> SPOUSE(["返回 person.spouse"])
     HUSBAND_OK -- "否" --> NULL(["返回 null"])
-    SPOUSE_KIND -- "否" --> WIFE_OK{"person 是男性，且 spouse 是女性？"}
+    SPOUSE_KIND -- "否" --> WIFE_OK{"person 是男性，且 spouse 是女性？<br/>（妻子方向是否成立）"}
     WIFE_OK -- "是" --> SPOUSE
     WIFE_OK -- "否" --> NULL
 
     TYPE -- "四種手足" --> SIBLING_KIND{"relation 值？"}
-    SIBLING_KIND -- "olderBrother" --> OB[["findSibling(person, 'male', 'older')"]]
-    SIBLING_KIND -- "youngerBrother" --> YB[["findSibling(person, 'male', 'younger')"]]
-    SIBLING_KIND -- "olderSister" --> OS[["findSibling(person, 'female', 'older')"]]
-    SIBLING_KIND -- "youngerSister" --> YS[["findSibling(person, 'female', 'younger')"]]
+    SIBLING_KIND -- "olderBrother" --> OB[["findSibling(person, 'male', 'older')<br/>（找最接近的年長男性手足）"]]
+    SIBLING_KIND -- "youngerBrother" --> YB[["findSibling(person, 'male', 'younger')<br/>（找最接近的年輕男性手足）"]]
+    SIBLING_KIND -- "olderSister" --> OS[["findSibling(person, 'female', 'older')<br/>（找最接近的年長女性手足）"]]
+    SIBLING_KIND -- "youngerSister" --> YS[["findSibling(person, 'female', 'younger')<br/>（找最接近的年輕女性手足）"]]
 
     TYPE -- "四種子女" --> CHILD_KIND{"relation 值？"}
-    CHILD_KIND -- "olderSon" --> OSON[["findChild(person, 'male', 'older')"]]
-    CHILD_KIND -- "youngerSon" --> YSON[["findChild(person, 'male', 'younger')"]]
-    CHILD_KIND -- "olderDaughter" --> OD[["findChild(person, 'female', 'older')"]]
-    CHILD_KIND -- "youngerDaughter" --> YD[["findChild(person, 'female', 'younger')"]]
+    CHILD_KIND -- "olderSon" --> OSON[["findChild(person, 'male', 'older')<br/>（找最年長的兒子）"]]
+    CHILD_KIND -- "youngerSon" --> YSON[["findChild(person, 'male', 'younger')<br/>（找最年輕的兒子）"]]
+    CHILD_KIND -- "olderDaughter" --> OD[["findChild(person, 'female', 'older')<br/>（找最年長的女兒）"]]
+    CHILD_KIND -- "youngerDaughter" --> YD[["findChild(person, 'female', 'younger')<br/>（找最年輕的女兒）"]]
 
     TYPE -- "其他" --> NULL
-    OB --> RETURN_CALL(["返回呼叫結果"])
+    OB --> RETURN_CALL(["返回呼叫結果<br/>（直接交回找到的人物或 null）"])
     YB --> RETURN_CALL
     OS --> RETURN_CALL
     YS --> RETURN_CALL
@@ -387,11 +387,11 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：findSibling(person, gender, direction)"]) --> AVAILABLE{"person.birthOrder !== null<br/>且 person.siblings.length > 0？"}
+    START(["開始：findSibling(person, gender, direction)"]) --> AVAILABLE{"person.birthOrder !== null 且 person.siblings.length > 0？<br/>（是否具備可比較的手足資料）"}
     AVAILABLE -- "否" --> RETURN_NULL(["返回 null"])
     AVAILABLE -- "是" --> FILTER["從 person.siblings 排除本人<br/>篩選 gender 相同者，再依 direction 比較 birthOrder"]
     FILTER --> SORT["direction === 'older' 時 birthOrder 由大到小<br/>否則由小到大排序"]
-    SORT --> RETURN(["返回 candidates[0] 或 null"])
+    SORT --> RETURN(["返回 candidates[0] 或 null<br/>（回傳最接近者，找不到則回傳 null）"])
 ```
 
 圖 28：`findSibling(person, gender, direction)` 子流程
@@ -399,11 +399,11 @@ flowchart TD
 ```mermaid
 flowchart TD
     START(["開始：findChild(person, gender, direction)"]) --> FILTER["從 person.children 篩選 gender 相同者<br/>並依 birthOrder 由小到大排序"]
-    FILTER --> AVAILABLE{"candidates.length > 0？"}
+    FILTER --> AVAILABLE{"candidates.length > 0？<br/>（是否找到指定性別的子女）"}
     AVAILABLE -- "否" --> RETURN_NULL(["返回 null"])
-    AVAILABLE -- "是" --> OLDER{"direction === 'older'？"}
-    OLDER -- "是" --> FIRST(["返回 candidates[0]"])
-    OLDER -- "否" --> LAST(["返回 candidates[candidates.length - 1]"])
+    AVAILABLE -- "是" --> OLDER{"direction === 'older'？<br/>（是否要較年長者）"}
+    OLDER -- "是" --> FIRST(["返回 candidates[0]<br/>（回傳最早出生者）"])
+    OLDER -- "否" --> LAST(["返回 candidates[candidates.length - 1]<br/>（回傳最晚出生者）"])
 ```
 
 圖 29：`findChild(person, gender, direction)` 子流程

@@ -23,7 +23,7 @@ hw3/
 - Keep all CSS and the favicon inside the HTML file.
 - Do not add a framework, package manager, backend, external asset, or CDN without explicit approval.
 - Keep README.md human-facing; implementation and deployment notes belong here.
-- Keep README.md's Mermaid flowcharts synchronized with the JavaScript. Give each event handler its own chart, use exact function and variable names, use ISO 5807-style shapes, and chart every called custom function as a separate subflow.
+- Keep README.md's Mermaid flowcharts synchronized with the JavaScript. Give each event handler its own chart, use exact function and variable names with concise Traditional Chinese explanations for code-heavy labels, use ISO 5807-style shapes, and chart every called custom function as a separate subflow.
 
 ## Interface and content
 
