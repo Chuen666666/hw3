@@ -42,10 +42,10 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：evaluateButton 的 click 事件"]) --> READ[/"讀取 state.rootGender、state.steps"/]
+    START(["開始：evaluateButton 的 click 事件"]) --> READ[/"讀取 state.rootGender"/]
     READ --> VALID{"VALID_GENDERS.has(state.rootGender)？"}
     VALID -- "否" --> END(["結束"])
-    VALID -- "是" --> ACTION[["performAction(change)<br/>change：state.result ← evaluate(state.steps, state.rootGender)"]]
+    VALID -- "是" --> ACTION[["performAction(change)（見圖 11）<br/>change：state.result ← evaluate(state.steps, state.rootGender)"]]
     ACTION --> END
 ```
 

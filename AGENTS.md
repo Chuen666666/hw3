@@ -63,7 +63,7 @@ The interface has exactly 16 buttons:
 - Long press must work with pointer, touch, Enter, and Space without also triggering a short back action.
 - Enter and Space repeat events must prevent browser defaults without restarting the long-press timer or causing extra back actions.
 - Preserve the existing family-graph evaluator, supported titles, gender rules, parental side, marriage direction, and older/younger distinctions.
-- Great-grandparent generations, consecutive sibling steps, and unsupported same-sex spouse paths are outside the assignment scope.
+- The graph does not model great-grandparent generations or same-sex spouse paths. Consecutive sibling steps resolve only when the current node has a sibling matching the requested gender and older/younger direction; otherwise they fail as out of scope.
 - Do not use `eval()`, infer a missing gender, or replace the evaluator with a few hard-coded full strings.
 - Invalid, empty, incomplete, or unsupported input must fail safely without crashing.
 
