@@ -245,21 +245,15 @@ flowchart TD
 flowchart TD
     START(["開始：evaluate(steps, rootGender)"]) --> INPUT[/"讀取 steps、rootGender"/]
     INPUT --> GENDER{"VALID_GENDERS.has(rootGender)？"}
-    GENDER -- "否" --> GENDER_ERROR["result ← gender-required 錯誤物件"]
+    GENDER -- "否" --> GENDER_ERROR(["返回 gender-required 錯誤物件"])
     GENDER -- "是" --> NONEMPTY{"Array.isArray(steps)<br/>且 steps.length > 0？"}
-    NONEMPTY -- "否" --> EMPTY_ERROR["result ← empty 錯誤物件"]
+    NONEMPTY -- "否" --> EMPTY_ERROR(["返回 empty 錯誤物件"])
     NONEMPTY -- "是" --> VALID{"每個 step 都是 RELATION_LABELS 的鍵？"}
-    VALID -- "否" --> INVALID_ERROR["result ← invalid-step 錯誤物件"]
-    VALID -- "是" --> GRAPH[["getGraph(rootGender)"]]
-    GRAPH --> RESOLVE[["resolvePath(graph, steps)"]]
+    VALID -- "否" --> INVALID_ERROR(["返回 invalid-step 錯誤物件"])
+    VALID -- "是" --> RESOLVE[["match ← resolvePath(getGraph(rootGender), steps)"]]
     RESOLVE --> MATCH{"match 存在？"}
-    MATCH -- "否" --> SCOPE_ERROR["result ← out-of-scope 錯誤物件"]
-    MATCH -- "是" --> SUCCESS["result ← resolved 成功物件<br/>title ← match.title"]
-    GENDER_ERROR --> RETURN(["返回 result"])
-    EMPTY_ERROR --> RETURN
-    INVALID_ERROR --> RETURN
-    SCOPE_ERROR --> RETURN
-    SUCCESS --> RETURN
+    MATCH -- "否" --> SCOPE_ERROR(["返回 out-of-scope 錯誤物件"])
+    MATCH -- "是" --> SUCCESS(["返回 {ok: true, code: 'resolved',<br/>title: match.title}"])
 ```
 
 圖 19：`evaluate(steps, rootGender)` 子流程
@@ -267,11 +261,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     START(["開始：getGraph(gender)"]) --> CACHE{"graphCache.has(gender)？"}
-    CACHE -- "否" --> BUILD[["buildGraph(gender)"]]
-    BUILD --> SAVE["graphCache.set(gender, 建立結果)"]
-    CACHE -- "是" --> GET["graph ← graphCache.get(gender)"]
-    SAVE --> GET
-    GET --> RETURN(["返回 graph"])
+    CACHE -- "否" --> SAVE[["graphCache.set(gender, buildGraph(gender))"]]
+    CACHE -- "是" --> RETURN(["返回 graphCache.get(gender)"])
+    SAVE --> RETURN
 ```
 
 圖 20：`getGraph(gender)` 子流程
@@ -310,12 +302,8 @@ flowchart TD
 ```mermaid
 flowchart TD
     START(["開始：family(father, mother, children)"]) --> COUPLE["father.spouse ← mother<br/>mother.spouse ← father<br/>father.children、mother.children ← children"]
-    COUPLE --> INDEX["index ← 0"]
-    INDEX --> LOOP{"index < children.length？"}
-    LOOP -- "否" --> RETURN(["返回"])
-    LOOP -- "是" --> LINK["child.father ← father<br/>child.mother ← mother<br/>child.siblings ← children<br/>child.birthOrder ← index"]
-    LINK --> NEXT["index ← index + 1"]
-    NEXT --> LOOP
+    COUPLE --> CHILDREN["children.forEach((child, index) => {...})<br/>child.father ← father<br/>child.mother ← mother<br/>child.siblings ← children<br/>child.birthOrder ← index"]
+    CHILDREN --> RETURN(["返回"])
 ```
 
 圖 23：`family(father, mother, children)` 子流程
@@ -361,43 +349,38 @@ flowchart TD
 flowchart TD
     START(["開始：follow(person, relation)"]) --> TYPE{"relation 類型？"}
     TYPE -- "father／mother" --> PARENT{"relation === 'father'？"}
-    PARENT -- "是" --> FATHER["nextPerson ← person.father"]
-    PARENT -- "否" --> MOTHER["nextPerson ← person.mother"]
+    PARENT -- "是" --> FATHER(["返回 person.father"])
+    PARENT -- "否" --> MOTHER(["返回 person.mother"])
 
     TYPE -- "husband／wife" --> SPOUSE_KIND{"relation === 'husband'？"}
     SPOUSE_KIND -- "是" --> HUSBAND_OK{"person 是女性，且 spouse 是男性？"}
-    HUSBAND_OK -- "是" --> HUSBAND["nextPerson ← person.spouse"]
-    HUSBAND_OK -- "否" --> NULL["nextPerson ← null"]
+    HUSBAND_OK -- "是" --> SPOUSE(["返回 person.spouse"])
+    HUSBAND_OK -- "否" --> NULL(["返回 null"])
     SPOUSE_KIND -- "否" --> WIFE_OK{"person 是男性，且 spouse 是女性？"}
-    WIFE_OK -- "是" --> WIFE["nextPerson ← person.spouse"]
+    WIFE_OK -- "是" --> SPOUSE
     WIFE_OK -- "否" --> NULL
 
     TYPE -- "四種手足" --> SIBLING_KIND{"relation 值？"}
-    SIBLING_KIND -- "olderBrother" --> OB[["nextPerson ← findSibling(person, 'male', 'older')"]]
-    SIBLING_KIND -- "youngerBrother" --> YB[["nextPerson ← findSibling(person, 'male', 'younger')"]]
-    SIBLING_KIND -- "olderSister" --> OS[["nextPerson ← findSibling(person, 'female', 'older')"]]
-    SIBLING_KIND -- "youngerSister" --> YS[["nextPerson ← findSibling(person, 'female', 'younger')"]]
+    SIBLING_KIND -- "olderBrother" --> OB[["findSibling(person, 'male', 'older')"]]
+    SIBLING_KIND -- "youngerBrother" --> YB[["findSibling(person, 'male', 'younger')"]]
+    SIBLING_KIND -- "olderSister" --> OS[["findSibling(person, 'female', 'older')"]]
+    SIBLING_KIND -- "youngerSister" --> YS[["findSibling(person, 'female', 'younger')"]]
 
     TYPE -- "四種子女" --> CHILD_KIND{"relation 值？"}
-    CHILD_KIND -- "olderSon" --> OSON[["nextPerson ← findChild(person, 'male', 'older')"]]
-    CHILD_KIND -- "youngerSon" --> YSON[["nextPerson ← findChild(person, 'male', 'younger')"]]
-    CHILD_KIND -- "olderDaughter" --> OD[["nextPerson ← findChild(person, 'female', 'older')"]]
-    CHILD_KIND -- "youngerDaughter" --> YD[["nextPerson ← findChild(person, 'female', 'younger')"]]
+    CHILD_KIND -- "olderSon" --> OSON[["findChild(person, 'male', 'older')"]]
+    CHILD_KIND -- "youngerSon" --> YSON[["findChild(person, 'male', 'younger')"]]
+    CHILD_KIND -- "olderDaughter" --> OD[["findChild(person, 'female', 'older')"]]
+    CHILD_KIND -- "youngerDaughter" --> YD[["findChild(person, 'female', 'younger')"]]
 
     TYPE -- "其他" --> NULL
-    FATHER --> RETURN(["返回 nextPerson"])
-    MOTHER --> RETURN
-    HUSBAND --> RETURN
-    WIFE --> RETURN
-    NULL --> RETURN
-    OB --> RETURN
-    YB --> RETURN
-    OS --> RETURN
-    YS --> RETURN
-    OSON --> RETURN
-    YSON --> RETURN
-    OD --> RETURN
-    YD --> RETURN
+    OB --> RETURN_CALL(["返回呼叫結果"])
+    YB --> RETURN_CALL
+    OS --> RETURN_CALL
+    YS --> RETURN_CALL
+    OSON --> RETURN_CALL
+    YSON --> RETURN_CALL
+    OD --> RETURN_CALL
+    YD --> RETURN_CALL
 ```
 
 圖 27：`follow(person, relation)` 子流程
@@ -408,8 +391,7 @@ flowchart TD
     AVAILABLE -- "否" --> RETURN_NULL(["返回 null"])
     AVAILABLE -- "是" --> FILTER["從 person.siblings 排除本人<br/>篩選 gender 相同者，再依 direction 比較 birthOrder"]
     FILTER --> SORT["direction === 'older' 時 birthOrder 由大到小<br/>否則由小到大排序"]
-    SORT --> RESULT["result ← candidates[0] 或 null"]
-    RESULT --> RETURN(["返回 result"])
+    SORT --> RETURN(["返回 candidates[0] 或 null"])
 ```
 
 圖 28：`findSibling(person, gender, direction)` 子流程
@@ -420,10 +402,8 @@ flowchart TD
     FILTER --> AVAILABLE{"candidates.length > 0？"}
     AVAILABLE -- "否" --> RETURN_NULL(["返回 null"])
     AVAILABLE -- "是" --> OLDER{"direction === 'older'？"}
-    OLDER -- "是" --> FIRST["result ← candidates[0]"]
-    OLDER -- "否" --> LAST["result ← candidates[candidates.length - 1]"]
-    FIRST --> RETURN(["返回 result"])
-    LAST --> RETURN
+    OLDER -- "是" --> FIRST(["返回 candidates[0]"])
+    OLDER -- "否" --> LAST(["返回 candidates[candidates.length - 1]"])
 ```
 
 圖 29：`findChild(person, gender, direction)` 子流程
