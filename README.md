@@ -8,10 +8,10 @@
 
 ```mermaid
 flowchart TD
-    START(["開始：relationButtons 的 click 事件"]) --> READ[/"讀取 state.rootGender<br/>與 button.dataset.relation"/]
+    START(["開始：relationButtons 的 click 事件"]) --> READ[/"讀取 state.rootGender"/]
     READ --> VALID{"VALID_GENDERS.has(state.rootGender)？"}
     VALID -- "否" --> END(["結束"])
-    VALID -- "是" --> ACTION[["performAction(change)<br/>change：將關係加入 state.steps，並將 state.result 設為 null"]]
+    VALID -- "是" --> ACTION[["performAction(change)<br/>change：state.steps.push(button.dataset.relation)<br/>state.result ← null"]]
     ACTION --> END
 ```
 
@@ -146,8 +146,12 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["開始：cloneState()"]) --> COPY["複製 state.rootGender<br/>以 slice() 複製 state.steps<br/>以 Object.assign() 複製 state.result"]
-    COPY --> RETURN(["返回狀態快照"])
+    START(["開始：cloneState()"]) --> COPY["回傳物件的 rootGender ← state.rootGender<br/>steps ← state.steps.slice()"]
+    COPY --> HAS_RESULT{"state.result 存在？"}
+    HAS_RESULT -- "是" --> COPY_RESULT["result ← Object.assign({}, state.result)"]
+    HAS_RESULT -- "否" --> NULL_RESULT["result ← null"]
+    COPY_RESULT --> RETURN(["返回 {rootGender, steps, result}"])
+    NULL_RESULT --> RETURN
 ```
 
 圖 12：`cloneState()` 子流程
